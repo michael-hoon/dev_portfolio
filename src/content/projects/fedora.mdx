@@ -1,0 +1,57 @@
+---
+title: Fedora Config
+date: 12-18-2024
+description: Attempting to daily-drive Fedora KDE Plasma 6.
+image: ../assets/fedora/fedora.png
+info:
+  - text: Github
+    link: https://github.com/michael-hoon/fedora-dotfiles
+    icon:
+      type: lucide
+      name: github
+---
+
+import { Image } from 'astro:assets';
+import FedoraDesktop from '../assets/fedora/fedora_desktop.png';
+import Btop from '../assets/fedora/btop.png';
+import Kitty from '../assets/fedora/kitty.png';
+
+## TLDR;
+
+Started off with Mint and Gnome, wanted something more customisable and also to learn more about Linux in general. Moved over to Pop!OS with [Cosmic DE](https://system76.com/cosmic) when it was still in Beta. Had many bugs, looked in to immutable distros such as [Kinoite](https://fedoraproject.org/atomic-desktops/kinoite/), [Silverblue](https://fedoraproject.org/atomic-desktops/silverblue/), [Bluefin](https://projectbluefin.io/) , and [Aurora](https://getaurora.dev/en) - for the containerisation/cloud native features and also **dinosaurs** and **auroras**.
+
+Settled on KDE Plasma 6 for customisability and also to learn the linux ecosystem.
+
+---
+
+## Minimal Desktop Setup
+
+<div class="image-center">
+  <Image src={FedoraDesktop} alt="Meeting OYK" loading="lazy" decoding="async" sizes="(max-width: 1200px) 100vw, 1200px" />
+</div>
+
+---
+
+## Stuff I'm Running
+
+### btop
+
+[btop](https://github.com/aristocratos/btop): an aesthetic terminal-based resource monitor, running with catppuccin theme:
+
+<div class="image-center">
+  <Image src={Btop} alt="Meeting OYK" loading="lazy" decoding="async" sizes="(max-width: 1200px) 100vw, 1200px" />
+</div>
+
+### kitty
+
+[kitty](https://sw.kovidgoyal.net/kitty/) is a fast, feature-rich, GPU based terminal emulator:
+
+<div class="image-center">
+  <Image src={Kitty} alt="Meeting OYK" loading="lazy" decoding="async" sizes="(max-width: 1200px) 100vw, 1200px" />
+</div>
+
+### ulauncher
+
+[ulauncher](https://ulauncher.io/): an application launcher for linux
+
+### more to come...

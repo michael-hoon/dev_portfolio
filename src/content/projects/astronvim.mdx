@@ -1,0 +1,44 @@
+---
+title: AstroNvim Config
+date: 09-14-2025
+description: Attempting to daily drive AstroNvim as a fully-featured IDE.
+image: ../assets/astronvim/astronvim_example.png
+info:
+  - text: GitHub
+    link: https://github.com/michael-hoon/astronvim_config
+    icon:
+      type: lucide
+      name: github
+---
+
+import { Image } from 'astro:assets';
+import AstronvimImage from '../assets/astronvim/astronvim_config.png';
+
+I've been messing around with [AstroNvim](https://astronvim.com/) and daily driving it for general text editing/coding and anything that doesn't require Jupyter Notebooks (unfortunately support for notebook environments is still quite poor in the Vim community). My dotfiles can be found in the GitHub link. The default [documentation](https://docs.astronvim.com/) is a great place to start learning (assuming you're already comfortable with the default keybindings and vim motions).
+
+---
+
+AstroNvim is an aesthetically pleasing and feature-rich neovim config that is extensible and easy to use with a great set of plugins. This is what my usual setup looks like:
+
+<div class="image-center">
+  <Image src={AstronvimImage} alt="AstroNvim setup screenshot" loading="lazy" decoding="async" sizes="(max-width: 1200px) 100vw, 1200px" />
+</div>
+
+---
+
+**Font**: Jetbrains Mono Nerd Font
+
+Aside from the default Astro plugins, I'm also running the following:
+
+1. Copilot
+2. Catppuccin Theme
+3. ... (Maybe more in the future?)
+
+I mostly run Python with:
+
+- [basedpyright](https://github.com/DetachHead/basedpyright) (FOSS Fork of Pyright static type checker)
+- [Ruff](https://docs.astral.sh/ruff/) (Extremely fast linter written in Rust, backed by [Astral](https://astral.sh/))
+
+Astral has been building high performance developer tools for the Python ecosystem, and continues to do so with [uv](https://github.com/astral-sh/uv) - a Python package and environment manager, and [Pyx](https://astral.sh/pyx) - an upcoming Python-native package registry in closed beta.
+
+There's much more for me to learn about AstroNvim, the community plugins, and lua scripting in general, will update this post along the way as I discover new things!

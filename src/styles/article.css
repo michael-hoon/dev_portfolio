@@ -17,15 +17,22 @@ article hr {
   background-color: #353535;
 }
 
-p:has(img) {
+.image-row, .image-center {
   display: flex;
+  gap: 1rem;
   align-items: center;
   justify-content: center;
   margin-top: 1rem;
   margin-bottom: 1rem;
+  flex-wrap: wrap;
 }
 
-p img {
+.image-center {
+  justify-content: center;
+}
+
+.image-row img, .image-center img {
+  height: auto;
   max-width: 100%;
 }
 

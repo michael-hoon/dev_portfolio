@@ -1,0 +1,53 @@
+---
+title: Build for Good 2024
+date: 09-27-2024
+description: Connecting JC students with industry professionals for authentic career guidance and mentorship.
+image: ../assets/buildforgood/bfg_team.png
+info:
+  - text: GitHub
+    link: https://github.com/vibinibiv/ecg_webapp_bfg
+    icon:
+      type: lucide
+      name: github
+
+  - text: BFG Publication
+    link: https://www.build.gov.sg/bfg2024/careerquest/
+    icon:
+      type: lucide
+      name: panel-top
+---
+
+import { Image } from 'astro:assets';
+import BFGPoster from '../assets/buildforgood/bfg_poster.png';
+
+## Thoughts
+
+Didn't initially intend to participate in this hackathon, but glad we did in the end. Provided valuable experience in the world of product development and engineering, and allowed us to thoroughly dive into user research, atypical of standard hackathons where problem statements are usually spoon-fed to participants. Probably pivoted problem statements at least 10 times. Fun times.
+
+## About the Hackathon
+
+[Build for Good](https://www.build.gov.sg/) runs month-long citizen hackathons where teams will choose a public good problem to work on, identify solutions, build prototypes, and test them with users. They will be provided the necessary support through their journey such as domain expertise, mentorship, workshops and resources. At the finale, teams will present their solutions to government leaders and industry experts. Winning teams will receive funding and go through a 8-week accelerator to further develop their products, and potentially launch them with real users.
+
+## Problem Statement
+
+Junior College (JC) students need to make informed decisions about their university courses and career paths immediately after completing JC. Despite existing Educational and Career Guidance (ECG) programmes and existing services like Discover On My Way (NYC) and MySkillsFuture, they are still uncertain and stressed about future options, as they have limited access to authentic information and first-hand experiences, and often feel unprepared or unsure about what questions to ask career guidance counsellors to guide them in making more informed decisions.
+
+## Project Poster
+
+<div class="image-center">
+  <Image src={BFGPoster} alt="Meeting OYK" loading="lazy" decoding="async" sizes="(max-width: 1200px) 100vw, 1200px" />
+</div>
+
+---
+
+## CareerQuest!
+
+While there are a number of ECG programmes in JCs which allow students to get information on different industries and careers, there is a gap in students' insight on real industry experiences or authentic opinions from different professionals.
+
+To address this issue, we propose the creation of a centralised platform designed to facilitate effective communication and interaction between Industry Professionals and JC Students. This will serve as a complementary platform to existing ECG resource portals used by MOE and the schools.
+
+Key Features of the ECG Portal:
+
+1. Personalised Career Guidance: Students will be given industry and career suggestions based on what they're good at, what they enjoy, and what is needed in the world *(Hackathon demo recommender system was done with - unfortunately - LLM completions due to time constraints)*.
+
+2. Direct Professional Connections: Students will be able to chat and schedule meetings with industry professionals directly through the portal, giving them a platform other than industry talks to ask questions on different careers. Improving existing ECG services by introducing additional connections with industry professionals will also complement the role of ECG counsellors in school in providing authentic experiences.

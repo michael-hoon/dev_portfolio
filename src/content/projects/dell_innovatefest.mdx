@@ -1,0 +1,55 @@
+---
+title: Dell Innovatefest 2024
+date: 09-23-2024
+description: A Hackathon with a heart? First win in the books.
+image: ../assets/dell_innovatefest/CAL09437.JPG
+info:
+  - text: GitHub
+    link: https://github.com/michael-hoon/dell-innovatefest-2024
+    icon:
+      type: lucide
+      name: github
+
+  - text: SUTD Publication
+    link: https://www.sutd.edu.sg/achievements-listing/national-third-prize-in-university-track-for-dell-innovatefest-2024-team-feamurs/
+    icon:
+      type: lucide
+      name: school
+---
+
+import { Image } from 'astro:assets';
+import OYKImage from '../assets/dell_innovatefest/CAL09279.JPG';
+import TeamImage from '../assets/dell_innovatefest/CAL08848.JPG';
+import ArchiDiag from '../assets/dell_innovatefest/lepaklaharchitecture.jpg';
+
+## Thoughts
+
+First hackathon where we made it to the finals and emerged as Top 3, with an overall prize of SGD$3000 💵💵💵. Competing against other teams in the local University category, we had low expectations but were met with a pleasant surprise since it was a very last-minute decision to participate in the challenge. Presenting our solution on stage to a large audience and to judges from distinguished companies such as RedHat, Dell Technologies, SCDF, and AsiaPac was a nerve-wrecking experience, but good practice overall. Here are some event pictures:
+
+<div class="image-center">
+  <Image src={OYKImage} alt="Meeting OYK" loading="lazy" decoding="async" sizes="(max-width: 1200px) 100vw, 1200px" />
+</div>
+
+<div class="image-center">
+  <Image src={TeamImage} alt="Team Booth Image" loading="lazy" decoding="async" sizes="(max-width: 1200px) 100vw, 1200px" />
+</div>
+
+---
+
+## About the Hackathon
+
+The second edition of Dell Technologies’ Hackathon-with-a-Heart, [InnovateFest 2024](https://www.dell.com/en-sg/dt/corporate/newsroom/announcements/detailpage.press-releases~usa~2024~09~20240926-dell-innovatefest-2024--hackathon-tackles-social-isolation-for-seniors-and-pwids.htm#/filter-on/Country:en-sg) witnessed the final presentations by young talents from universities and polytechnics and was jointly organized with Movement for the Intellectually Disabled of Singapore (MINDS) and Lions Befrienders. This year’s theme focuses on solving social isolation challenges faced by persons with intellectual disabilities (PWIDs) and the vulnerable aged community.
+
+## Our Solution
+
+A brief overview of our proposed solution's technical architecture diagram:
+
+<div class="image-center">
+  <Image src={ArchiDiag} alt="LepakLah Architecture Diagram" loading="lazy" decoding="async" sizes="(max-width: 1200px) 100vw, 1200px" />
+</div>
+
+The solution, **LepakLah!**, as the name suggests, essentially seeks to empower tech-savvy elderly who face difficulties securing slots at Lions Befriender's activity centres due to limited slots and inefficient bidding systems with a one-stop app. We also seek to promote active aging, strengthen community ties and ensure that seniors have access to activities that truly resonate with their interests. This is done via a simulated buddy-matching recommendation system that takes into account the users' interests to pair up participants who are signing up for a particular event. 
+
+Furthermore, event ideation, logistics, and promotion are done via the app automatically with an LLM and Image-generation model hosted on Nvidia's NIM platform. This will support the activity centre staff in creating and managing centre-run events.
+
+This was our first time working with the tech-stack in a small production-environment, especially with managing docker containers, and Kubernetes clusters on OpenShift. Find out more about the project in the GitHub link!
