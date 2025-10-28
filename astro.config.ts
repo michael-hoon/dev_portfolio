@@ -1,5 +1,7 @@
 import { defineConfig } from 'astro/config';
 
+import vercel from '@astrojs/vercel/serverless';
+
 import expressiveCode from 'astro-expressive-code';
 import mdx from '@astrojs/mdx';
 import sitemap from '@astrojs/sitemap';
@@ -10,7 +12,7 @@ import { spectreDark } from './src/ec-theme';
 
 // https://astro.build/config
 const config = defineConfig({
-  site: 'https://michael-hoon.github.io',
+  site: 'https://michael-hoon.vercel.app',
   output: 'static',
   integrations: [
     expressiveCode({
@@ -36,9 +38,7 @@ const config = defineConfig({
       },
     })
   ],
-  adapter: node({
-    mode: 'standalone'
-  })
+  adapter: vercel(),
 });
 
 export default config;
