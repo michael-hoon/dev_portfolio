@@ -23,6 +23,7 @@ const quickInfo = defineCollection({
     id: z.number(),
     icon: z.union([lucideIconSchema, simpleIconSchema]),
     text: z.string(),
+    link: z.string().optional(),
   })
 });
 

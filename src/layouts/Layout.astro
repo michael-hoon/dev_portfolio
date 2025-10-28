@@ -12,13 +12,14 @@ interface Props {
 	description?: string;
 	image?: ImageMetadata;
 	pagefindIgnore?: boolean;
+	fullWidth?: boolean;
 	article?: {
 		createdAt: Date;
 		updatedAt?: Date;
 	};
 }
 
-const { title, description, image, pagefindIgnore, article } = Astro.props;
+const { title, description, image, pagefindIgnore, article, fullWidth } = Astro.props;
 ---
 
 <!DOCTYPE html>
@@ -67,12 +68,33 @@ const { title, description, image, pagefindIgnore, article } = Astro.props;
 	<body>
 		<main data-pagefind-ignore={pagefindIgnore}>
 			<Navbar />
-			<LayoutGrid>
-				<slot name="left" slot="left" />
-				<slot name="right" slot="right" />
-			</LayoutGrid>
+			{fullWidth ? (
+				<div class="full-width">
+					<slot name="full" />
+				</div>
+			) : (
+				<LayoutGrid>
+					<slot name="left" slot="left" />
+					<slot name="right" slot="right" />
+				</LayoutGrid>
+			)}
 			<slot name="404" />
 		</main>
+		<footer class="site-footer" data-pagefind-ignore>
+			Made with Astro 🚀 • Spectre Terminal theme
+		</footer>
 		<Background />
+		<style>
+			.site-footer {
+				margin-top: 2rem;
+				text-align: center;
+				color: #c7c7c7;
+				font-size: .925rem;
+			}
+
+			.full-width {
+				margin-top: 2rem;
+			}
+		</style>
 	</body>
 </html>

@@ -1,9 +1,23 @@
 [
   {
     "id": 1,
-    "duration": "2024 - present",
-    "company": "Astro Community",
-    "title": "Astro Theme",
-    "description": "Existing as an Astro theme for anyone to use."
+    "duration": "Jan 2024 - Apr. 2024",
+    "company": "Poh Tiong Choon Logistics Ltd.",
+    "title": "Data Analyst Intern",
+    "description": "Supply Chain Optimization: Analyzed delivery driver datasets with Python & Power BI to improve scheduling and built automated Bash/Python ETL pipelines, boosting driver utilization by ~20% and cutting report time from 8 h → 1 h."
+  },
+  {
+    "id": 2,
+    "duration": "Mar. 2024 - Dec. 2024",
+    "company": "DSO National Laboratories",
+    "title": "AI Engineer Intern",
+    "description": "Multi-Agent RAG System: Built a containerized, graph-based local RAG pipeline (LangGraph + Ollama + Neo4j + PostgreSQL) for research assistance, generating Knowledge Graphs from PDFs and improving multi-hop query accuracy by ~30%, cutting research analysis time by 10+ hours/week."
+  },
+  {
+    "id": 3,
+    "duration": "Jun. 2025 - Sep. 2024",
+    "company": "Government Technology Agency (GovTech) Singapore",
+    "title": "Data Engineer Intern",
+    "description": "Cloud Data Platform Modernization: Optimised Redshift data warehouse performance (-30% storage, -15% latency) and deployed a SageMaker Unified Studio analytics zone (Bedrock, Glue, Athena, DataZone) with Terraform IaC, centralizing data for 50+ users and enabling 100M+ daily clickstream insights via Firehose → S3 → Redshift → Quicksight."
   }
 ]

@@ -10,7 +10,7 @@ import { spectreDark } from './src/ec-theme';
 
 // https://astro.build/config
 const config = defineConfig({
-  site: 'https://spectre.lou.gg',
+  site: 'https://michael-hoon.github.io',
   output: 'static',
   integrations: [
     expressiveCode({
@@ -19,19 +19,20 @@ const config = defineConfig({
     mdx(),
     sitemap(),
     spectre({
-      name: 'Spectre',
+      name: 'Michael Hoon',
       openGraph: {
         home: {
-          title: 'Spectre',
+          title: 'AboutMe',
           description: 'A minimalistic theme for Astro.'
         },
-        blog: {
-          title: 'Blog',
-          description: 'News and guides for Spectre.'
-        },
         projects: {
-          title: 'Projects'
-        }
+          title: 'Projects',
+          description: 'Projects I have worked on.'
+        },
+        blog: {
+          title: 'Photography',
+          description: 'Photos I have taken for fun.'
+        },
       },
     })
   ],

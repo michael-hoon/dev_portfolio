@@ -1,0 +1,119 @@
+---
+import Layout from "../layouts/Layout.astro";
+import Card from "../components/Card.astro";
+import Icon from "../components/Icon.astro";
+import { Image } from 'astro:assets';
+
+// Load asset photos with metadata for Astro Image optimization
+const assetPhotoModules = import.meta.glob("../assets/photos/*.{jpg,jpeg,png,webp,avif}", { eager: true });
+type AssetMod = { default: any, width: number, height: number, src: string };
+const assetEntries = Object.entries(assetPhotoModules) as Array<[string, AssetMod]> ;
+
+// Load public photos as raw URLs
+const publicPhotoPaths = Object.keys(import.meta.glob("/public/photos/*.{jpg,jpeg,png,webp,avif}"));
+
+function extractYearFromPath(path: string): number | null {
+  const base = path.split('/').pop() || '';
+  const match = base.match(/(19|20)\d{2}/);
+  return match ? Number(match[0]) : null;
+}
+
+const assetPhotos = assetEntries.map(([path, mod]) => ({
+  type: 'asset' as const,
+  src: mod.default?.src ?? mod.src,
+  width: mod.width,
+  height: mod.height,
+  year: extractYearFromPath(path) ?? 1900,
+  mod
+}));
+
+const publicPhotos = publicPhotoPaths.map((path) => ({
+  type: 'public' as const,
+  src: path.replace('/public', ''),
+  width: undefined,
+  height: undefined,
+  year: extractYearFromPath(path) ?? 1900
+}));
+
+const photos = [...assetPhotos, ...publicPhotos].sort((a, b) => b.year - a.year);
+---
+
+<Layout title="Photography" description="A selection of my photography." fullWidth>
+  <div slot="full">
+    <div class="justified-grid three-cols" id="gallery">
+      {photos.map((p: any) => (
+        <a href={p.src} data-fancybox="gallery" class="gallery-item">
+          {p.type === 'asset' ? (
+            <Image src={p.mod.default ?? p.mod} alt="Photo" loading="lazy" sizes="(max-width: 1200px) 33vw, 33vw" />
+          ) : (
+            <img loading="lazy" src={p.src} alt="Photo" />
+          )}
+        </a>
+      ))}
+    </div>
+  </div>
+</Layout>
+
+<!-- Fancybox (lightbox) -->
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/ui/dist/fancybox/fancybox.css" />
+<script is:inline src="https://cdn.jsdelivr.net/npm/@fancyapps/ui/dist/fancybox/fancybox.umd.js"></script>
+<script is:inline>
+  window.addEventListener('DOMContentLoaded', () => {
+    // @ts-ignore
+    if (window.Fancybox) {
+      // @ts-ignore
+      window.Fancybox.bind('[data-fancybox="gallery"]', {
+        Thumbs: false,
+      });
+    }
+  });
+</script>
+
+<style>
+  /* SmolCSS-style responsive masonry/justified layout preserving aspect ratios */
+  .justified-grid {
+    --gap: .5rem;
+    columns: 3 360px;
+    column-gap: var(--gap);
+  }
+
+  .gallery-item {
+    display: inline-block;
+    margin: 0 0 var(--gap);
+    width: 100%;
+    border: 1px solid #353535;
+    background: #111;
+  }
+
+  .gallery-item img,
+  .gallery-item picture,
+  .gallery-item canvas {
+    width: 100%;
+    height: auto;
+    display: block;
+  }
+
+  @media (max-width: 1024px) {
+    .justified-grid { columns: 2 280px; }
+  }
+  @media (max-width: 640px) {
+    .justified-grid { columns: 1 200px; }
+  }
+
+  /* toolbar removed */
+
+  .year-filter {
+    display: flex;
+    flex-wrap: wrap;
+    gap: .5rem;
+    padding: 0;
+    list-style: none;
+    margin-top: .5rem;
+  }
+  .year-filter a {
+    text-decoration: none;
+    padding: .25rem .5rem;
+    border: 1px solid #353535;
+  }
+</style>
+
