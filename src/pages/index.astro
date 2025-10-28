@@ -11,6 +11,7 @@ import { getCollection } from 'astro:content';
 import { getEntry } from 'astro:content';
 import { render } from 'astro:content';
 import { name, openGraph } from 'spectre:globals';
+import { Image } from 'astro:assets';
 
 const [posts, projects, about, workExperience, quickInfo, socials] = await Promise.all([
   getCollection('posts', (post) => post.data.draft !== true),
@@ -20,6 +21,13 @@ const [posts, projects, about, workExperience, quickInfo, socials] = await Promi
 	getCollection('quickInfo'),
 	getCollection('socials')
 ]);
+
+// Load up to 4 asset photos as homepage thumbnails
+const homepagePhotoModules = import.meta.glob("../assets/photos/*.{jpg,jpeg,png,webp,avif}", { eager: true });
+const homepagePhotos = Object.entries(homepagePhotoModules)
+	.sort(([aPath], [bPath]) => aPath.localeCompare(bPath))
+	.slice(0, 4)
+	.map(([, mod]: any) => mod.default ?? mod);
 
 // biome-ignore lint/style/noNonNullAssertion: Should always be defined.
 const { Content: About } = await render(about!);
@@ -109,17 +117,16 @@ const { Content: About } = await render(about!);
 				))}
 			</div>
 		</Card>
-		<Card>
+    <Card>
 	      <div class="header-container">
 	        <Icon type='lucide' name="camera" width={24} height={24} class='glow-icon' />
 	        <h2>Photography</h2>
 	      </div>
 	      <a href="/photography" class="gallery-strip" aria-label="Open photography gallery">
 	        <div class="gallery-strip-row">
-	          <img src="/photos/thumb-1.jpg" alt="Thumbnail 1" loading="lazy" />
-	          <img src="/photos/thumb-2.jpg" alt="Thumbnail 2" loading="lazy" />
-	          <img src="/photos/thumb-3.jpg" alt="Thumbnail 3" loading="lazy" />
-	          <img src="/photos/thumb-4.jpg" alt="Thumbnail 4" loading="lazy" />
+          {homepagePhotos.map((imgMod: any) => (
+            <Image src={imgMod} alt="Photo preview" widths={[320, 480]} sizes="(max-width: 1024px) 50vw, 25vw" loading="lazy" />
+          ))}
 	        </div>
 	      </a>
 	    </Card>
@@ -161,10 +168,10 @@ const { Content: About } = await render(about!);
     gap: .5rem;
   }
 
-  .gallery-strip-row img {
+  .gallery-strip-row :is(img, picture) {
     width: 100%;
-    aspect-ratio: 4 / 3;
-    object-fit: cover;
+    height: auto;
+    display: block;
     border: 1px solid #353535;
     background: #111;
   }
