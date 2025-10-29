@@ -38,7 +38,11 @@ const config = defineConfig({
       },
     })
   ],
-  adapter: vercel(),
+  adapter: vercel(
+    webAnalytics: {
+      enabled: true,
+    },
+  ),
 });
 
 export default config;

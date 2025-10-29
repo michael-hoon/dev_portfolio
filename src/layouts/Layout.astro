@@ -5,6 +5,7 @@ import '../styles/globals.css';
 import Background from '../components/Background.astro';
 import Navbar from '../components/Navbar.astro';
 import LayoutGrid from '../components/LayoutGrid.astro';
+import Analytics from '@vercel/analytics/astro';
 import { name, themeColor, twitterHandle } from 'spectre:globals';
 
 interface Props {
@@ -64,6 +65,7 @@ const { title, description, image, pagefindIgnore, article, fullWidth } = Astro.
 		<meta name="twitter:title" content={title} />
 		{description && <meta name="twitter:description" content={description} />}
 		<meta name="twitter:image" content={image?.src || '/img/og.png'} />
+		<Analytics />
 	</head>
 	<body>
 		<main data-pagefind-ignore={pagefindIgnore}>
