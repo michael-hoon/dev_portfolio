@@ -12,10 +12,13 @@ const assetEntries = Object.entries(assetPhotoModules) as Array<[string, AssetMo
 // Load public photos as raw URLs
 const publicPhotoPaths = Object.keys(import.meta.glob("/public/photos/*.{jpg,jpeg,png,webp,avif}"));
 
-function extractYearFromPath(path: string): number | null {
+function extractDateFromPath(path: string): number | null {
   const base = path.split('/').pop() || '';
-  const match = base.match(/(19|20)\d{2}/);
-  return match ? Number(match[0]) : null;
+  const match = base.match(/(\d{4})-(\d{2})-(\d{2})/);
+  if (match) {
+    return new Date(match[0]).getTime();
+  }
+  return 0;
 }
 
 const assetPhotos = assetEntries.map(([path, mod]) => ({
@@ -23,7 +26,7 @@ const assetPhotos = assetEntries.map(([path, mod]) => ({
   src: mod.default?.src ?? mod.src,
   width: mod.width,
   height: mod.height,
-  year: extractYearFromPath(path) ?? 1900,
+  date: extractDateFromPath(path) ?? 0,
   mod
 }));
 
@@ -32,10 +35,10 @@ const publicPhotos = publicPhotoPaths.map((path) => ({
   src: path.replace('/public', ''),
   width: undefined,
   height: undefined,
-  year: extractYearFromPath(path) ?? 1900
+  date: extractDateFromPath(path) ?? 0
 }));
 
-const photos = [...assetPhotos, ...publicPhotos].sort((a, b) => b.year - a.year);
+const photos = [...assetPhotos, ...publicPhotos].sort((a, b) => b.date- a.date);
 ---
 
 <Layout title="Photography" description="A selection of my photography." fullWidth>
