@@ -12,7 +12,7 @@ import { spectreDark } from './src/ec-theme';
 
 // https://astro.build/config
 const config = defineConfig({
-  site: 'https://michael-hoon.vercel.app',
+  site: 'https://michaelhoon.dev',
   output: 'static',
   integrations: [
     expressiveCode({
