@@ -1,6 +1,6 @@
 import { defineConfig } from 'astro/config';
 
-import vercel from '@astrojs/vercel/serverless';
+import vercel from '@astrojs/vercel';
 
 import expressiveCode from 'astro-expressive-code';
 import mdx from '@astrojs/mdx';
