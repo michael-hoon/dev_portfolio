@@ -16,6 +16,7 @@
     "@astrojs/node": "^9.4.2",
     "@astrojs/sitemap": "^3.5.0",
     "@astrojs/vercel": "^9.0.0",
+    "@fancyapps/ui": "^6.1.7",
     "@iconify-json/lucide": "^1.2.20",
     "@iconify-json/simple-icons": "^1.2.18",
     "@iconify/utils": "^2.2.1",
