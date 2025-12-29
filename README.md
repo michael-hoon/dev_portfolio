@@ -1,42 +1,103 @@
-![Spectre, a terminal-inspired theme for Astro.](./images/README.png)
+# Michael Hoon - Portfolio Website
 
-Spectre is a terminal-inspired theme for Astro, built using TypeScript and Astro.
+Personal portfolio website showcasing my AI and data engineering work.
 
-## Getting Started
+**Live Site:** [michaelhoon.dev](https://michaelhoon.dev)
 
-[![Open in StackBlitz](https://developer.stackblitz.com/img/open_in_stackblitz.svg)](https://stackblitz.com/github/louisescher/spectre/tree/master)
-[![Open with CodeSandbox](https://assets.codesandbox.io/github/button-edit-lime.svg)](https://codesandbox.io/p/sandbox/github/louisescher/spectre/tree/master)
+## 🚀 Tech Stack
 
-Alternatively, you can create a new Astro project with Spectre like this:
+- **Framework:** Astro 5.x
+- **Language:** TypeScript
+- **Styling:** CSS (with custom properties)
+- **Gallery:** Fancybox
+- **Search:** Pagefind
+- **Deployment:** Vercel
+- **Analytics:** Vercel Web Analytics
 
-```bash
-# npm
-npm create astro@latest -- --template louisescher/spectre
+## 🏗️ Project Structure
 
-# pnpm
-pnpm create astro@latest --template louisescher/spectre
-
-# yarn
-yarn create astro --template louisescher/spectre
+```
+src/
+├── assets/         # Static assets optimized by Astro
+│   └── photos/     # Photography gallery images
+├── components/     # Reusable Astro components
+├── content/        # Content collections
+│   ├── projects/   # Project MDX files
+│   ├── posts/      # Blog posts
+│   └── other/      # Other content
+├── layouts/        # Page layouts
+├── pages/          # Route pages
+├── scripts/        # Client-side scripts
+└── styles/         # Global CSS styles
 ```
 
-## Features
+## 🔧 Local Development
 
-- 100 / 100 Lighthouse performance
-- Responsive for all screen sizes
-- Fully accessible
-- Type-Safe
-- Auto-generated sitemap
-- Markdown / MDX Support
-- Builds on content collections
-- Search powered by [pagefind](https://pagefind.app)
-- Comments powered by [giscus](https://giscus.app) (can be turned off)
-- More!
+```bash
+npm install
+npm run dev
+```
 
-## Curious?
+Visit `http://localhost:4321`
 
-Head over to [the preview page](https://spectre.lou.gg) to find out more!
+## 📝 Adding Content
 
-### Spectre Integration
+### Adding a New Project
 
-If you want to know more about how the custom integration that is used in the `astro.config.ts` file works, head over to the [integration's own README](https://github.com/louisescher/spectre/tree/master/package)!
+1. Create `src/content/projects/my-project.mdx`
+2. Add frontmatter:
+
+```yaml
+---
+title: "Project Title"
+description: "Brief description"
+date: 2025-01-15
+image: ~/assets/project-image.jpg
+link: https://github.com/yourusername/repo
+info:
+  - text: "GitHub"
+    icon: { type: "simple-icons", name: "github" }
+    link: https://github.com/yourusername/repo
+  - text: "Tech Stack"
+    icon: { type: "lucide", name: "code" }
+---
+```
+
+3. Write content in Markdown/MDX
+
+### Adding Photos to Gallery
+
+- **Optimized:** Place in `src/assets/photos/`
+- **Direct serve:** Place in `public/photos/`
+- **Naming:** Use format `YYYY-MM-DD-description.jpg` for automatic date sorting
+
+Example: `2025-01-15-sunset-landscape.jpg`
+
+## 🚢 Deployment
+
+Automatically deploys to Vercel on push to `main` branch.
+
+### Manual Deploy
+```bash
+npm run build
+npm run preview
+```
+
+## 🧪 Development Scripts
+
+```bash
+npm run dev         # Start development server
+npm run build       # Build for production
+npm run preview     # Preview production build
+npm run lint        # Run linter
+npm run format      # Format code
+npm run type-check  # Check TypeScript types
+```
+
+## 📄 License
+
+© 2025 Michael Hoon. All rights reserved.
+
+## 🤝 Based On
+
+Built with the [Spectre theme](https://github.com/louisescher/spectre) for Astro.
