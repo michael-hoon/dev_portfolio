@@ -38,30 +38,44 @@ const { Content } = await render(project);
   }}
 >
   <div class="left" slot="left">
-    <Card class="toc-card">
-      <h2 class="no-mt">Info</h2>
-      <ul class="overview-list">
-        {
-          project.data.info.map((info) => {
-            const Tag = info.link ? "a" : "div";
-            return (
-              <li>
-                <Tag href={info.link} class="project-info-item">
-                  <Icon
-                    type={info.icon.type}
-                    name={info.icon.name as any}
-                    width={24}
-                    height={24}
-                    class="glow-icon"
-                  />
-                  <span>{info.text}</span>
-                </Tag>
-              </li>
-            );
-          })
-        }
-      </ul>
-    </Card>
+    <div class="sticky-sidebar">
+      <Card class="toc-card">
+        <h2 class="no-mt">Info</h2>
+        <ul class="overview-list">
+          {
+            project.data.info.map((info) => {
+              const Tag = info.link ? "a" : "div";
+              return (
+                <li>
+                  <Tag href={info.link} class="project-info-item">
+                    <Icon
+                      type={info.icon.type}
+                      name={info.icon.name as any}
+                      width={24}
+                      height={24}
+                      class="glow-icon"
+                    />
+                    <span>{info.text}</span>
+                  </Tag>
+                </li>
+              );
+            })
+          }
+        </ul>
+      </Card>
+      {
+        project.data.tags && project.data.tags.length > 0 && (
+          <Card class="tags-card">
+            <h2 class="no-mt">Tags</h2>
+            <div class="tags-container">
+              {project.data.tags.map((tag) => (
+                <span class="tag-badge">{tag.id}</span>
+              ))}
+            </div>
+          </Card>
+        )
+      }
+    </div>
   </div>
   <article slot="right" data-pagefind-body>
     <Card>
@@ -98,5 +112,48 @@ const { Content } = await render(project);
     display: flex;
     align-items: center;
     gap: 1rem;
+  }
+
+  .sticky-sidebar {
+    position: sticky;
+    top: 2rem;
+  }
+
+  .tags-card {
+    margin-top: 1rem;
+  }
+
+  .tags-container {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+    margin-top: 0.75rem;
+  }
+
+  .tag-badge {
+    display: inline-block;
+    padding: 0.375rem 0.75rem;
+    background: linear-gradient(
+      135deg,
+      rgba(99, 102, 241, 0.1),
+      rgba(139, 92, 246, 0.1)
+    );
+    border: 1px solid rgba(99, 102, 241, 0.3);
+    border-radius: 0.5rem;
+    font-size: 0.875rem;
+    font-weight: 500;
+    color: var(--text-primary, #e5e7eb);
+    text-transform: capitalize;
+    transition: all 0.2s ease;
+  }
+
+  .tag-badge:hover {
+    background: linear-gradient(
+      135deg,
+      rgba(99, 102, 241, 0.2),
+      rgba(139, 92, 246, 0.2)
+    );
+    border-color: rgba(99, 102, 241, 0.5);
+    transform: translateY(-1px);
   }
 </style>

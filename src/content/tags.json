@@ -1,5 +1,56 @@
 [
   {
     "id": "guide"
+  },
+  {
+    "id": "data-engineering"
+  },
+  {
+    "id": "internship"
+  },
+  {
+    "id": "redshift"
+  },
+  {
+    "id": "aws"
+  },
+  {
+    "id": "database-optimization"
+  },
+  {
+    "id": "hackathon"
+  },
+  {
+    "id": "ai-ml"
+  },
+  {
+    "id": "web-development"
+  },
+  {
+    "id": "langgraph"
+  },
+  {
+    "id": "neo4j"
+  },
+  {
+    "id": "streamlit"
+  },
+  {
+    "id": "docker"
+  },
+  {
+    "id": "python"
+  },
+  {
+    "id": "react"
+  },
+  {
+    "id": "typescript"
+  },
+  {
+    "id": "linux"
+  },
+  {
+    "id": "neovim"
   }
 ]
