@@ -6,7 +6,7 @@ import Background from '../components/Background.astro';
 import Navbar from '../components/Navbar.astro';
 import LayoutGrid from '../components/LayoutGrid.astro';
 import Analytics from '@vercel/analytics/astro';
-import { name, themeColor, twitterHandle } from 'spectre:globals';
+import { name, themeColor, twitterHandle, openGraph } from 'spectre:globals';
 
 interface Props {
 	title: string;
@@ -31,10 +31,10 @@ const { title, description, image, pagefindIgnore, article, fullWidth } = Astro.
 
 		<meta charset="UTF-8" />
 		<meta name="viewport" content="width=device-width" />
-		<link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+		<link rel="icon" type="image/svg+xml" href="/favicon.svg?v=2" />
 		<meta name="generator" content={Astro.generator} />
 
-		<title>{title}</title>
+		<title>{title === name || title === openGraph.home.title ? name : `${title} - ${name}`}</title>
 		{description && <meta name="description" content={description} />}
 		<meta name="theme-color" content={themeColor}>
 
