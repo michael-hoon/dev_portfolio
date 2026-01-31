@@ -23,6 +23,7 @@ tags:
 ---
 
 import { Image } from 'astro:assets';
+import Figure from '../../components/Figure.astro';
 import BFGPoster from '../assets/buildforgood/bfg_poster.png';
 
 ## Thoughts
@@ -39,9 +40,12 @@ Junior College (JC) students need to make informed decisions about their univers
 
 ## Project Poster
 
-<div class="image-center">
-  <Image src={BFGPoster} alt="Meeting OYK" loading="lazy" decoding="async" sizes="(max-width: 1200px) 100vw, 1200px" />
-</div>
+<Figure 
+  src={BFGPoster} 
+  alt="BFG Poster" 
+  caption="Figure 1: Final BFG Poster"
+  width="80%"
+/>
 
 ---
 

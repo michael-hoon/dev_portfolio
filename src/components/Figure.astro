@@ -1,0 +1,51 @@
+---
+import { Image } from 'astro:assets';
+
+interface Props {
+  src: any;
+  alt: string;
+  caption?: string;
+  width?: string;
+  class?: string;
+}
+
+const { src, alt, caption, width = "100%", class: className } = Astro.props;
+---
+
+<figure class:list={["custom-figure", className]} style={`max-width: ${width};`}>
+  <div class="image-wrapper">
+    <Image src={src} alt={alt} />
+  </div>
+  {caption && <figcaption>{caption}</figcaption>}
+</figure>
+
+<style>
+  .custom-figure {
+    margin: 2rem auto;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 100%;
+  }
+
+  .image-wrapper {
+    width: 100%;
+    display: flex;
+    justify-content: center;
+  }
+
+  .custom-figure img {
+    height: auto;
+    width: 100%;
+    border-radius: 0.5rem;
+  }
+
+  figcaption {
+    margin-top: 0.75rem;
+    font-size: 0.875rem;
+    color: #a1a1aa; /* text-zinc-400 */
+    text-align: center;
+    font-style: italic;
+    line-height: 1.4;
+  }
+</style>

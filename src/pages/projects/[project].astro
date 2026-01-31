@@ -26,6 +26,30 @@ export const getStaticPaths = (async () => {
   }));
 }) satisfies GetStaticPaths;
 
+/**
+ * Estimates the time it takes to read a post in minutes based on:
+ * - A reading speed of 200 words per minute
+ * - 10 seconds per image
+ * - 20 seconds per code block
+ *
+ * @param project The project to estimate the reading time for
+ */
+function timeToRead(project: CollectionEntry<"projects">): number {
+  const numWords = (project.body || "")
+    .replace(/.*\[(.*?)\].*/gm, "$1")
+    .replace(/```.*?```/gms, "")
+    .split(/\s+/).length;
+
+  const numImages = project.body?.match(/!\[/g)?.length || 0;
+  const numCodeblocks = project.body?.match(/```/g)?.length || 0;
+
+  return (
+    Math.ceil(numWords / 200) +
+    Math.ceil(numImages / 6) +
+    Math.ceil(numCodeblocks / 3)
+  );
+}
+
 const { Content } = await render(project);
 ---
 
@@ -96,6 +120,12 @@ const { Content } = await render(project);
           </div>
           <div class="article-info">
             <span>{project.data.date.toLocaleDateString()}</span>
+            <span>/</span>
+            <span
+              >{timeToRead(project)} minute{
+                timeToRead(project) === 1 ? "" : "s"
+              } to read</span
+            >
           </div>
         </div>
       </div>

@@ -17,6 +17,7 @@ tags:
 ---
 
 import { Image } from 'astro:assets';
+import Figure from '../../components/Figure.astro';
 import OLAPvsOLTP from '../assets/redshift_optimise/olap_vs_oltp.png';
 
 # Squeezing Performance from the Redshift Giant
@@ -52,9 +53,12 @@ Some of the key topics I needed to master:
 
 ## OLAP vs OLTP: Understanding the Paradigm Shift
 
-<div class="image-center">
-  <Image src={OLAPvsOLTP} alt="OLAP vs OLTP Comparison" loading="lazy" decoding="async" sizes="(max-width: 1200px) 100vw, 1200px" />
-</div>
+<Figure 
+  src={OLAPvsOLTP} 
+  alt="OLAP vs OLTP Comparison" 
+  caption="Figure 1: Comparison between OLTP (Transactional) and OLAP (Analytical) database paradigms."
+  width="80%"
+/>
 
 ### Why Redshift is the Chosen Tool for Analytics:
 1.  **Columnar Storage**: Instead of reading entire rows (which includes data you don't need), it only reads the specific columns you ask for.

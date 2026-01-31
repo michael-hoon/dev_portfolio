@@ -19,6 +19,7 @@ tags:
 ---
 
 import { Image } from 'astro:assets';
+import Figure from '../../components/Figure.astro';
 import Architecture from '../assets/graphmind/Architecture.jpg';
 import Router from '../assets/graphmind/router.jpg';
 import ResearchSubgraph from '../assets/graphmind/research_subgraph.jpg';
@@ -66,16 +67,41 @@ GraphMind is an advanced AI research assistant leveraging LangGraph for agent or
 The underlying architecture behind the GraphMind Agentic Framework leverages the [Graphreader paper](https://arxiv.org/abs/2406.14550). The diagrams below show the proposed implementation:
 
 <div class="image-row">
-    <Image src={Architecture} alt="GraphMind Proposed Architecture" loading="lazy" decoding="async" sizes="(max-width: 1200px) 100vw, 1200px" />
-    <Image src={Router} alt="Semantic Router Agent" loading="lazy" decoding="async" sizes="(max-width: 1200px) 100vw, 1200px" />
-    <Image src={ResearchSubgraph} alt="Research Subgraph" loading="lazy" decoding="async" sizes="(max-width: 1200px) 100vw, 1200px" />
-    <Image src={AgentNodes} alt="Agent Node Architecture" loading="lazy" decoding="async" sizes="(max-width: 1200px) 100vw, 1200px" />
+    <Figure 
+      src={Architecture} 
+      alt="GraphMind Proposed Architecture" 
+      caption="Figure 1: GraphMind Proposed Architecture"
+      width="80%"
+    />
+    <Figure 
+      src={Router} 
+      alt="Semantic Router Agent" 
+      caption="Figure 2: Semantic Router Agent"
+      width="80%"
+    />
+    <Figure 
+      src={ResearchSubgraph} 
+      alt="Research Subgraph" 
+      caption="Figure 3: Research Subgraph"
+      width="80%"
+    />
+    <Figure 
+      src={AgentNodes} 
+      alt="Agent Node Architecture" 
+      caption="Figure 4: Multi Agent Node Architecture"
+      width="80%"
+    />
 </div>
 
 The Neo4j Knowledge Graph ontology is pre-defined and shown as follows:
 
 <div class="image-center">
-    <Image src={Neo4jOntology} alt="Neo4j Ontology" loading="lazy" decoding="async" sizes="(max-width: 1200px) 100vw, 1200px" />
+    <Figure 
+      src={Neo4jOntology} 
+      alt="Neo4j Ontology" 
+      caption="Figure 5: Neo4j Database Ontology"
+      width="80%"
+    />
 </div>
 
 ## Requirements

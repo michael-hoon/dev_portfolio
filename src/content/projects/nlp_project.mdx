@@ -1,0 +1,101 @@
+---
+title: How MoE Models Reason in Southeast Asian Languages
+date: 12-20-2025
+description: A deep dive into the "black box" of MoE models and how they reason in Southeast Asian languages.
+image: ../assets/nlp_project/mixture_of_experts.png
+info:
+  - text: GitHub
+    link: https://github.com/michael-hoon/nlp-final-project
+    icon:
+      type: lucide
+      name: github
+tags:
+  - large-language-models
+  - llm
+  - nlp
+  - research
+  - mixture-of-experts
+---
+
+import { Image } from 'astro:assets';
+import Figure from '../../components/Figure.astro';
+import MoE_Model from '../assets/nlp_project/switch_transformer.png';
+import tSNE_Plot from '../assets/nlp_project/tsne_indonesian.png';
+import divergence_plot from '../assets/nlp_project/divergence_indonesian.png';
+import culture_shock from '../assets/nlp_project/culture_shock_indonesian.png';
+
+## Decoding the "Translationese" Shadow: How MoE Models Reason in Southeast Asian Languages
+
+If you’ve been following the recent explosion of Large Language Models (LLMs), you’ve likely heard of the Mixture-of-Experts (MoE) architecture. Models like Mixtral or Alibaba's Qwen3 use this architecture to stay computationally efficient while scaling to trillions of parameters. However, does this "efficiency" hold up for our regional Southeast Asian (SEA) languages, or are we just living in the shadow of English-centric routing?
+
+For my final NLP project at SUTD, I took a deep dive into the qualitative mechanics of how MoE models, specifically Qwen3-30B-A3B, navigate the linguistic landscape of SEA languages like Indonesian, Thai, and Vietnamese.
+
+<Figure 
+  src={MoE_Model} 
+  alt="MoE Model Architecture" 
+  caption="Figure 1: Comparison of Dense vs Mixture-of-Experts (MoE) architectures."
+  width="80%"
+/>
+
+---
+
+## The Semantic Hub Hypothesis
+
+The prevailing theory in dense models is the "Semantic Hub Hypothesis". It suggests that models project different languages into a unified "universal" representation space in their middle layers—effectively a "language of thought" that is usually dominated by English.
+
+Recent literature by [Bandarkar et al. (2025)](https://arxiv.org/abs/2510.04694) suggests that MoE models follow a U-shaped divergence curve:
+
+- Early Layers: Specialize in language-specific tokens (high divergence).
+- Middle Layers: Share experts across languages to form a "universal hub" (low divergence).
+- Late Layers: Diverge again to specialize in the target output language.
+
+This research project sought to test if this hub is **truly "universal"** or if it's biased toward Western-centric concepts.
+
+## The "W-Shape" and the Translationese Effect
+
+By analyzing routing weights on the [SeaExam dataset](https://huggingface.co/datasets/SeaLLMs/SeaExam) (regional educational questions), I discovered something the standard benchmarks missed.
+
+### The "W-Shape" Phenomenon
+
+<Figure 
+  src={divergence_plot} 
+  alt="Divergence Plot" 
+  caption="Figure 2: JS-Divergence across layers. Note the 'W-shape' spikes for complex Indonesian tasks."
+  width="85%"
+/>
+
+<Figure 
+  src={culture_shock} 
+  alt="Culture Shock" 
+  caption="Figure 3: Representation of 'Culture Shock' where the model reverts to language-specific experts."
+  width="70%"
+/>
+
+While general text follows the classic U-shape, complex native reasoning in Thai and Vietnamese introduces "kinks" or a "W-shape" in the middle layers (layers 13, 25, 38).
+
+- When the model encounters **truly native**, culturally-grounded reasoning tasks, it bypasses the "universal" shared experts. It seems to search for language-specific experts that weren't heavily aligned toward English during instruction tuning.
+
+### Visualizing "Translationese"
+
+Here I used t-SNE to project the router space of Layer 24 into 2D. The results were very interesting:
+
+<Figure 
+  src={tSNE_Plot} 
+  alt="t-SNE Plot" 
+  caption="Figure 4: t-SNE projection of routing weights. Translated Indonesian (orange) aligns with English (blue), while native Indonesian (green) remains distinct."
+  width="60%"
+/>
+
+- Clustering: Translated Indonesian (from English MMLU) clustered almost perfectly with English.
+- The Gap: Native Indonesian (M3Exam) sat in a completely different representational space.
+- The Conclusion: The router doesn't just see "Indonesian"; it sees the syntactic shadow of English in translated text. This "Translationese" effect means that translated benchmarks may not be measuring a model's true regional capability at all.
+
+### What’s Next? Steering the Native Reasoner
+
+These findings suggest that our current "universal" models might be **culture-sensitive but translation-agnostic**. The middle layers where the "reasoning engine" is located, is where the **real divergence** happens.
+
+Moving forward, I’m interested in **Model Steering**. If we can identify which experts are "Native Experts," could we force-activate them when a user asks a question in Vietnamese or Thai? This could **potentially bridge the performance gap** between native and translated content without the need for massive retraining.
+
+---
+
+Note: Check out the github link for the paper and code!
