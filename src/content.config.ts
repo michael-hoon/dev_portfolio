@@ -55,20 +55,6 @@ const tags = defineCollection({
   })
 });
 
-const posts = defineCollection({
-  loader: glob({ base: "src/content/posts", pattern: "**/*.{md,mdx}" }),
-  schema: ({ image }) => z.object({
-    title: z.string(),
-    createdAt: z.coerce.date(),
-    updatedAt: z.coerce.date().optional(),
-    description: z.string(),
-    tags: z.array(
-      reference("tags")
-    ),
-    draft: z.boolean().optional().default(false),
-    image: image(),
-  })
-});
 
 const projects = defineCollection({
   loader: glob({ base: "src/content/projects", pattern: "**/*.{md,mdx}" }),
@@ -91,4 +77,4 @@ const projects = defineCollection({
   })
 });
 
-export const collections = { tags, posts, projects, other, quickInfo, socials, workExperience };
+export const collections = { tags, projects, other, quickInfo, socials, workExperience };
