@@ -15,9 +15,16 @@
   },
   {
     "id": 3,
-    "duration": "Jun. 2025 - Sep. 2024",
+    "duration": "Jun. 2025 - Sep. 2025",
     "company": "Government Technology Agency (GovTech) Singapore",
     "title": "Data Engineer Intern",
     "description": "Cloud Data Platform Modernization: Optimised Redshift data warehouse performance (-30% storage, -15% latency) and deployed a SageMaker Unified Studio analytics zone (Bedrock, Glue, Athena, DataZone) with Terraform IaC, centralizing data for 50+ users and enabling 100M+ daily clickstream insights via Firehose → S3 → Redshift → Quicksight."
+  },
+  {
+    "id": 4,
+    "duration": "Sep. 2025 - Apr. 2026",
+    "company": "Home Team Science and Technology Agency (HTX)",
+    "title": "AI Engineer Intern",
+    "description": "Multi-Agent, Multi-Modal LLM System: Spearheaded development of multi-agent, multi-modal LLM system with LangGraph for multi-turn forensic reasoning in complex Singapore-specific AI-generated scams, achieving ~91% system accuracy."
   }
 ]
