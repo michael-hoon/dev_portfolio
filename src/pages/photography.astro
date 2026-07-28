@@ -1,73 +1,69 @@
 ---
-import Layout from "../layouts/Layout.astro";
-import Card from "../components/Card.astro";
-import Icon from "../components/Icon.astro";
 import { Image } from "astro:assets";
+import Layout from "../layouts/Layout.astro";
 import "@fancyapps/ui/dist/fancybox/fancybox.css";
 
 // Load asset photos with metadata for Astro Image optimization
-const assetPhotoModules = import.meta.glob(
-  "../assets/photos/*.{jpg,jpeg,png,webp,avif}",
-  { eager: true },
+const assetPhotoModules = import.meta.glob<{ default: ImageMetadata }>(
+	"../assets/photos/*.{jpg,jpeg,png,webp,avif}",
+	{ eager: true },
 );
-type AssetMod = { default: any; width: number; height: number; src: string };
-const assetEntries = Object.entries(assetPhotoModules) as Array<
-  [string, AssetMod]
->;
+type AssetMod = { default: ImageMetadata };
+const assetEntries = Object.entries(assetPhotoModules);
 
 // Define photo types
 type AssetPhoto = {
-  type: "asset";
-  src: string;
-  width: number;
-  height: number;
-  date: number;
-  mod: AssetMod;
+	type: "asset";
+	src: string;
+	width: number;
+	height: number;
+	date: number;
+	mod: AssetMod;
 };
 
 type PublicPhoto = {
-  type: "public";
-  src: string;
-  width: undefined;
-  height: undefined;
-  date: number;
+	type: "public";
+	src: string;
+	width: undefined;
+	height: undefined;
+	date: number;
 };
 
 type Photo = AssetPhoto | PublicPhoto;
 
 // Load public photos as raw URLs
 const publicPhotoPaths = Object.keys(
-  import.meta.glob("/public/photos/*.{jpg,jpeg,png,webp,avif}"),
+	import.meta.glob("/public/photos/*.{jpg,jpeg,png,webp,avif}"),
 );
 
 function extractDateFromPath(path: string): number | null {
-  const base = path.split("/").pop() || "";
-  const match = base.match(/(\d{4})-(\d{2})-(\d{2})/);
-  if (match) {
-    return new Date(match[0]).getTime();
-  }
-  return 0;
+	const base = path.split("/").pop() || "";
+	const match = base.match(/(\d{4})-(\d{2})-(\d{2})/);
+	if (match) {
+		return new Date(match[0]).getTime();
+	}
+	return 0;
 }
 
 const assetPhotos: AssetPhoto[] = assetEntries.map(([path, mod]) => ({
-  type: "asset" as const,
-  src: mod.default?.src ?? mod.src,
-  width: mod.width,
-  height: mod.height,
-  date: extractDateFromPath(path) ?? 0,
-  mod,
+	type: "asset" as const,
+	src: mod.default.src,
+	width: mod.default.width,
+	height: mod.default.height,
+	date: extractDateFromPath(path) ?? 0,
+	mod,
 }));
 
 const publicPhotos: PublicPhoto[] = publicPhotoPaths.map((path) => ({
-  type: "public" as const,
-  src: path.replace("/public", ""),
-  width: undefined,
-  height: undefined,
-  date: extractDateFromPath(path) ?? 0,
+	type: "public" as const,
+	src: path.replace("/public", ""),
+	width: undefined,
+	height: undefined,
+	date: extractDateFromPath(path) ?? 0,
 }));
 
 const photos: Photo[] = [...assetPhotos, ...publicPhotos].sort(
-  (a, b) => b.date - a.date,
+	(a, b) => b.date - a.date,
 );
 ---
 
@@ -83,7 +79,7 @@ const photos: Photo[] = [...assetPhotos, ...publicPhotos].sort(
           <a href={p.src} data-fancybox="gallery" class="gallery-item">
             {p.type === "asset" ? (
               <Image
-                src={p.mod.default ?? p.mod}
+                src={p.mod.default}
                 alt="Photo"
                 loading="lazy"
                 sizes="(max-width: 1200px) 33vw, 33vw"

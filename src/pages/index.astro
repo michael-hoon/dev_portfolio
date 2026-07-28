@@ -3,15 +3,15 @@ import "../styles/index.css";
 
 import ProfilePicture from "../assets/pfp.jpg";
 
-import Card from "../components/Card.astro";
-import Layout from "../layouts/Layout.astro";
-import ImageGlow from "../components/ImageGlow.astro";
-import Icon from "../components/Icon.astro";
+import { Image } from "astro:assets";
 import { getCollection } from "astro:content";
 import { getEntry } from "astro:content";
 import { render } from "astro:content";
 import { name, openGraph } from "spectre:globals";
-import { Image } from "astro:assets";
+import Card from "../components/Card.astro";
+import Icon from "../components/Icon.astro";
+import ImageGlow from "../components/ImageGlow.astro";
+import Layout from "../layouts/Layout.astro";
 
 const [projects, about, workExperience, quickInfo, socials] = await Promise.all(
 	[
@@ -24,14 +24,14 @@ const [projects, about, workExperience, quickInfo, socials] = await Promise.all(
 );
 
 // Load up to 4 asset photos as homepage thumbnails
-const homepagePhotoModules = import.meta.glob(
+const homepagePhotoModules = import.meta.glob<{ default: ImageMetadata }>(
 	"../assets/photos/*.{jpg,jpeg,png,webp,avif}",
 	{ eager: true },
 );
 const homepagePhotos = Object.entries(homepagePhotoModules)
 	.sort(([aPath], [bPath]) => aPath.localeCompare(bPath))
 	.slice(0, 4)
-	.map(([, mod]: any) => mod.default ?? mod);
+	.map(([, mod]) => mod.default);
 
 // biome-ignore lint/style/noNonNullAssertion: Should always be defined.
 const { Content: About } = await render(about!);
@@ -65,8 +65,7 @@ const { Content: About } = await render(about!);
 									rel="noopener noreferrer"
 								>
 									<Icon
-										type={info.data.icon.type}
-										name={info.data.icon.name as any}
+										{...info.data.icon}
 										width={24}
 										height={24}
 										class="glow-icon"
@@ -76,8 +75,7 @@ const { Content: About } = await render(about!);
 							) : (
 								<div class="quick-info-item">
 									<Icon
-										type={info.data.icon.type}
-										name={info.data.icon.name as any}
+										{...info.data.icon}
 										width={24}
 										height={24}
 										class="glow-icon"
@@ -98,8 +96,7 @@ const { Content: About } = await render(about!);
 						<li>
 							<a href={item.data.link} class="socials-link">
 								<Icon
-									type={item.data.icon.type}
-									name={item.data.icon.name as any}
+									{...item.data.icon}
 									width={24}
 									height={24}
 									class="glow-icon"
@@ -214,7 +211,7 @@ const { Content: About } = await render(about!);
 			>
 				<div class="gallery-strip-row">
 					{
-						homepagePhotos.map((imgMod: any) => (
+						homepagePhotos.map((imgMod) => (
 							<Image
 								src={imgMod}
 								alt="Photo preview"

@@ -1,43 +1,43 @@
 [
-  {
-    "id": 1,
-    "icon": {
-      "type": "lucide",
-      "name": "cake"
-    },
-    "text": "24 years old"
-  },
-  {
-    "id": 2,
-    "icon": {
-      "type": "lucide",
-      "name": "earth"
-    },
-    "text": "Made in Singapore 🇸🇬"
-  },
-  {
-    "id": 3,
-    "icon": {
-      "type": "lucide",
-      "name": "briefcase"
-    },
-    "text": "AI/Data Engineer"
-  },
-  {
-    "id": 4,
-    "icon": {
-      "type": "lucide",
-      "name": "graduation-cap"
-    },
-    "text": "Singapore University of Technology and Design"
-  },
-  {
-    "id": 5,
-    "icon": {
-      "type": "lucide",
-      "name": "file-user"
-    },
-    "text": "Resume/CV",
-    "link": "/resume_web.pdf"
-  }
+	{
+		"id": 1,
+		"icon": {
+			"type": "lucide",
+			"name": "cake"
+		},
+		"text": "24 years old"
+	},
+	{
+		"id": 2,
+		"icon": {
+			"type": "lucide",
+			"name": "earth"
+		},
+		"text": "Made in Singapore 🇸🇬"
+	},
+	{
+		"id": 3,
+		"icon": {
+			"type": "lucide",
+			"name": "briefcase"
+		},
+		"text": "AI/Data Engineer"
+	},
+	{
+		"id": 4,
+		"icon": {
+			"type": "lucide",
+			"name": "graduation-cap"
+		},
+		"text": "Singapore University of Technology and Design"
+	},
+	{
+		"id": 5,
+		"icon": {
+			"type": "lucide",
+			"name": "file-user"
+		},
+		"text": "Resume/CV",
+		"link": "/resume_web.pdf"
+	}
 ]

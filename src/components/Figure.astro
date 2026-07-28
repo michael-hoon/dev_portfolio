@@ -1,12 +1,12 @@
 ---
-import { Image } from 'astro:assets';
+import { Image } from "astro:assets";
 
 interface Props {
-  src: any;
-  alt: string;
-  caption?: string;
-  width?: string;
-  class?: string;
+	src: ImageMetadata;
+	alt: string;
+	caption?: string;
+	width?: string;
+	class?: string;
 }
 
 const { src, alt, caption, width = "100%", class: className } = Astro.props;

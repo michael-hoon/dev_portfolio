@@ -1,71 +1,71 @@
 [
-  {
-    "id": "guide"
-  },
-  {
-    "id": "data-engineering"
-  },
-  {
-    "id": "internship"
-  },
-  {
-    "id": "redshift"
-  },
-  {
-    "id": "aws"
-  },
-  {
-    "id": "database-optimization"
-  },
-  {
-    "id": "hackathon"
-  },
-  {
-    "id": "ai-ml"
-  },
-  {
-    "id": "web-development"
-  },
-  {
-    "id": "langgraph"
-  },
-  {
-    "id": "neo4j"
-  },
-  {
-    "id": "streamlit"
-  },
-  {
-    "id": "docker"
-  },
-  {
-    "id": "python"
-  },
-  {
-    "id": "react"
-  },
-  {
-    "id": "typescript"
-  },
-  {
-    "id": "linux"
-  },
-  {
-    "id": "neovim"
-  },
-  {
-    "id": "large-language-models"
-  },
-  {
-    "id": "llm"
-  },
-  {
-    "id": "nlp"
-  },
-  {
-    "id": "research"
-  },
-  {
-    "id": "mixture-of-experts"
-  }
+	{
+		"id": "guide"
+	},
+	{
+		"id": "data-engineering"
+	},
+	{
+		"id": "internship"
+	},
+	{
+		"id": "redshift"
+	},
+	{
+		"id": "aws"
+	},
+	{
+		"id": "database-optimization"
+	},
+	{
+		"id": "hackathon"
+	},
+	{
+		"id": "ai-ml"
+	},
+	{
+		"id": "web-development"
+	},
+	{
+		"id": "langgraph"
+	},
+	{
+		"id": "neo4j"
+	},
+	{
+		"id": "streamlit"
+	},
+	{
+		"id": "docker"
+	},
+	{
+		"id": "python"
+	},
+	{
+		"id": "react"
+	},
+	{
+		"id": "typescript"
+	},
+	{
+		"id": "linux"
+	},
+	{
+		"id": "neovim"
+	},
+	{
+		"id": "large-language-models"
+	},
+	{
+		"id": "llm"
+	},
+	{
+		"id": "nlp"
+	},
+	{
+		"id": "research"
+	},
+	{
+		"id": "mixture-of-experts"
+	}
 ]

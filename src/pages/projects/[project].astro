@@ -4,26 +4,26 @@ import "../../styles/article.css";
 import Card from "../../components/Card.astro";
 import Layout from "../../layouts/Layout.astro";
 
-import type { GetStaticPaths } from "astro";
 import type { CollectionEntry } from "astro:content";
 import { render } from "astro:content";
 import { getCollection } from "astro:content";
-import ImageGlow from "../../components/ImageGlow.astro";
+import type { GetStaticPaths } from "astro";
 import Icon from "../../components/Icon.astro";
+import ImageGlow from "../../components/ImageGlow.astro";
 
 interface Props {
-  project: CollectionEntry<"projects">;
+	project: CollectionEntry<"projects">;
 }
 
 const { project } = Astro.props;
 
 export const getStaticPaths = (async () => {
-  const projects = await getCollection("projects");
+	const projects = await getCollection("projects");
 
-  return projects.map((project) => ({
-    params: { project: project.id },
-    props: { project },
-  }));
+	return projects.map((project) => ({
+		params: { project: project.id },
+		props: { project },
+	}));
 }) satisfies GetStaticPaths;
 
 /**
@@ -35,19 +35,19 @@ export const getStaticPaths = (async () => {
  * @param project The project to estimate the reading time for
  */
 function timeToRead(project: CollectionEntry<"projects">): number {
-  const numWords = (project.body || "")
-    .replace(/.*\[(.*?)\].*/gm, "$1")
-    .replace(/```.*?```/gms, "")
-    .split(/\s+/).length;
+	const numWords = (project.body || "")
+		.replace(/.*\[(.*?)\].*/gm, "$1")
+		.replace(/```.*?```/gms, "")
+		.split(/\s+/).length;
 
-  const numImages = project.body?.match(/!\[/g)?.length || 0;
-  const numCodeblocks = project.body?.match(/```/g)?.length || 0;
+	const numImages = project.body?.match(/!\[/g)?.length || 0;
+	const numCodeblocks = project.body?.match(/```/g)?.length || 0;
 
-  return (
-    Math.ceil(numWords / 200) +
-    Math.ceil(numImages / 6) +
-    Math.ceil(numCodeblocks / 3)
-  );
+	return (
+		Math.ceil(numWords / 200) +
+		Math.ceil(numImages / 6) +
+		Math.ceil(numCodeblocks / 3)
+	);
 }
 
 const { Content } = await render(project);
@@ -73,8 +73,7 @@ const { Content } = await render(project);
                 <li>
                   <Tag href={info.link} class="project-info-item">
                     <Icon
-                      type={info.icon.type}
-                      name={info.icon.name as any}
+                      {...info.icon}
                       width={24}
                       height={24}
                       class="glow-icon"
