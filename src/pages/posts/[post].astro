@@ -67,6 +67,7 @@ const backLabel =
   article={{
     createdAt: post.data.date,
   }}
+  contentFirst
 >
   <div class="left" slot="left">
     <div class="sticky-sidebar">
@@ -168,9 +169,9 @@ const backLabel =
     border-radius: 0.5rem;
     font-size: 0.875rem;
     font-weight: 500;
-    color: var(--text-primary, #e5e7eb);
+    color: var(--text-primary);
     text-transform: capitalize;
-    transition: all 0.2s ease;
+    transition: all var(--transition-base);
   }
 
   .tag-badge:hover {

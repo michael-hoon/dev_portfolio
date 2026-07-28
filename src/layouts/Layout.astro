@@ -14,14 +14,23 @@ interface Props {
 	image?: ImageMetadata;
 	pagefindIgnore?: boolean;
 	fullWidth?: boolean;
+	/** Render the main content before the sidebar in DOM order (visual position is unchanged). */
+	contentFirst?: boolean;
 	article?: {
 		createdAt: Date;
 		updatedAt?: Date;
 	};
 }
 
-const { title, description, image, pagefindIgnore, article, fullWidth } =
-	Astro.props;
+const {
+	title,
+	description,
+	image,
+	pagefindIgnore,
+	article,
+	fullWidth,
+	contentFirst,
+} = Astro.props;
 
 const canonicalURL = new URL(Astro.url.pathname, Astro.site);
 const ogImageURL = new URL(image?.src ?? "/img/og.png", Astro.site);
@@ -80,7 +89,7 @@ const ogImageURL = new URL(image?.src ?? "/img/og.png", Astro.site);
 					<slot name="full" />
 				</div>
 			) : (
-				<LayoutGrid>
+				<LayoutGrid contentFirst={contentFirst}>
 					<slot name="left" slot="left" />
 					<slot name="right" slot="right" />
 				</LayoutGrid>
@@ -95,7 +104,7 @@ const ogImageURL = new URL(image?.src ?? "/img/og.png", Astro.site);
 			.site-footer {
 				margin-top: 2rem;
 				text-align: center;
-				color: #c7c7c7;
+				color: var(--text-muted);
 				font-size: .925rem;
 			}
 

@@ -2,8 +2,18 @@
 ---
 
 <li class="search-item">
-	<input id="search" type="text" placeholder="Search (Ctrl+K)" />
-	<div id="search-results"></div>
+	<input
+		id="search"
+		type="text"
+		placeholder="Search (Ctrl+K)"
+		role="combobox"
+		aria-autocomplete="list"
+		aria-expanded="false"
+		aria-controls="search-results"
+		autocomplete="off"
+	/>
+	<div id="search-results" role="region" aria-label="Search results"></div>
+	<p id="search-status" class="sr-only" aria-live="polite" aria-atomic="true"></p>
 </li>
 
 <script>
@@ -11,11 +21,18 @@
 
 	const searchElement = document.querySelector<HTMLInputElement>("#search");
 	const results = document.querySelector<HTMLDivElement>("#search-results");
+	const status = document.querySelector<HTMLParagraphElement>("#search-status");
 
 	let focusIndex = -1;
 
+	function openResults() {
+		results?.classList.add("active");
+		searchElement?.setAttribute("aria-expanded", "true");
+	}
+
 	function closeResults() {
 		results?.classList.remove("active");
+		searchElement?.setAttribute("aria-expanded", "false");
 		focusIndex = -1;
 	}
 
@@ -101,7 +118,7 @@
 
 	searchElement?.addEventListener("focus", async () => {
 		searchElement.placeholder = "";
-		results?.classList.add("active");
+		openResults();
 		await ensurePagefind();
 	});
 
@@ -153,7 +170,16 @@
 				? '<p style="margin-top: 0;">No results found</p>'
 				: searchResultHtml;
 
-		results.classList.add("active");
+		openResults();
+
+		if (status) {
+			status.textContent =
+				value.length === 0
+					? ""
+					: search.results.length === 0
+						? "No results found"
+						: `${search.results.length} result${search.results.length === 1 ? "" : "s"} found`;
+		}
 	});
 
 	document.addEventListener("DOMContentLoaded", updatePlaceholder);
@@ -164,7 +190,6 @@
 	#search {
 		background: none;
 		border: none;
-		outline: none;
 		padding: 0.25rem 0.5rem;
 		width: 160px;
 	}
@@ -174,14 +199,19 @@
 	}
 
 	#search:focus {
-		background-color: var(--primary);
+		background-color: var(--primary-contrast-bg);
+	}
+
+	#search:focus-visible {
+		outline: 2px solid var(--primary-lightest);
+		outline-offset: -2px;
 	}
 
 	#search-results {
 		position: absolute;
 		top: calc(100% + 0.5rem);
 		right: 0;
-		background-color: #252525;
+		background-color: var(--surface-3);
 		border: 1px solid var(--primary);
 		display: none;
 		width: 200%;
@@ -218,8 +248,12 @@
 
 	#search-results a:hover,
 	#search-results a:focus-visible {
-		background-color: var(--primary);
-		outline: none;
+		background-color: var(--primary-contrast-bg);
+	}
+
+	#search-results a:focus-visible {
+		outline: 2px solid var(--primary-lightest);
+		outline-offset: -2px;
 	}
 
 	#search-results a:hover mark,
@@ -240,7 +274,7 @@
 	}
 
 	#search-results mark {
-		background-color: var(--primary);
+		background-color: var(--primary-contrast-bg);
 		color: white;
 	}
 
@@ -248,6 +282,6 @@
 		margin: 0.5rem 0.5rem;
 		border: none;
 		height: 1px;
-		background-color: #353535;
+		background-color: var(--border);
 	}
 </style>

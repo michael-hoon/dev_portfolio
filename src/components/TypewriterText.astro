@@ -1,0 +1,52 @@
+---
+interface Props {
+	text: string;
+}
+
+const { text } = Astro.props;
+---
+
+<span class="typewriter" style={`--chars: ${text.length}`}>{text}</span>
+
+<style>
+	.typewriter {
+		display: inline-block;
+		overflow: hidden;
+		white-space: nowrap;
+		vertical-align: bottom;
+		width: calc(var(--chars) * 1ch);
+		border-right: 2px solid var(--primary);
+		font-family: var(--font-mono);
+		color: var(--primary);
+		animation:
+			typing 2.5s steps(var(--chars), end) infinite alternate,
+			blink-caret 0.75s step-end infinite;
+	}
+
+	@keyframes typing {
+		from {
+			width: 0;
+		}
+		to {
+			width: calc(var(--chars) * 1ch);
+		}
+	}
+
+	@keyframes blink-caret {
+		from,
+		to {
+			border-color: transparent;
+		}
+		50% {
+			border-color: var(--primary);
+		}
+	}
+
+	@media (prefers-reduced-motion: reduce) {
+		.typewriter {
+			animation: none;
+			border-right: none;
+			width: auto;
+		}
+	}
+</style>

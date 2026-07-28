@@ -1,8 +1,23 @@
 ---
+interface Props {
+	/** Render the "right" slot before "left" in DOM order, while keeping the same visual columns. */
+	contentFirst?: boolean;
+}
+
+const { contentFirst = false } = Astro.props;
 ---
-<div class="layout-grid">
-  <slot name="left" />
-  <slot name="right" />
+<div class="layout-grid" class:list={{ "content-first": contentFirst }}>
+  {contentFirst ? (
+    <>
+      <slot name="right" />
+      <slot name="left" />
+    </>
+  ) : (
+    <>
+      <slot name="left" />
+      <slot name="right" />
+    </>
+  )}
 </div>
 
 <style>
@@ -14,6 +29,16 @@
     gap: 2rem;
     grid-template-columns: 2fr 5fr;
     grid-template-rows: auto;
+  }
+
+  .layout-grid.content-first > :global(:first-child) {
+    grid-column: 2;
+    grid-row: 1;
+  }
+
+  .layout-grid.content-first > :global(:last-child) {
+    grid-column: 1;
+    grid-row: 1;
   }
 
   @media screen and (max-width: 1380px) {

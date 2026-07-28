@@ -2,6 +2,7 @@
 import { Image } from "astro:assets";
 import Layout from "../layouts/Layout.astro";
 import "@fancyapps/ui/dist/fancybox/fancybox.css";
+import photoAlt from "../data/photo-alt.json";
 
 // Load asset photos with metadata for Astro Image optimization
 const assetPhotoModules = import.meta.glob<{ default: ImageMetadata }>(
@@ -15,10 +16,15 @@ function extractDateFromPath(path: string): number {
 	return match ? new Date(match[0]).getTime() : 0;
 }
 
+// Alt text is opt-in via src/data/photo-alt.json, keyed by filename. Photos
+// without an entry render alt="" (valid, treated as decorative) rather than
+// a meaningless placeholder like alt="Photo".
 const photos = Object.entries(assetPhotoModules)
 	.map(([path, mod]) => ({
 		mod,
 		date: extractDateFromPath(path),
+		alt:
+			(photoAlt as Record<string, string>)[path.split("/").pop() ?? ""] ?? "",
 	}))
 	.sort((a, b) => b.date - a.date);
 ---
@@ -29,13 +35,17 @@ const photos = Object.entries(assetPhotoModules)
   fullWidth
 >
   <div slot="full">
+    <header class="gallery-header">
+      <h1 class="no-mt">Photography</h1>
+      <p>A selection of my photography.</p>
+    </header>
     <div class="justified-grid three-cols" id="gallery">
       {
         photos.map((p) => (
           <a href={p.mod.default.src} data-fancybox="gallery" class="gallery-item">
             <Image
               src={p.mod.default}
-              alt="Photo"
+              alt={p.alt}
               loading="lazy"
               sizes="(max-width: 1200px) 33vw, 33vw"
             />
@@ -55,6 +65,14 @@ const photos = Object.entries(assetPhotoModules)
 </script>
 
 <style>
+  .gallery-header {
+    margin-bottom: 1rem;
+  }
+
+  .gallery-header p {
+    color: var(--text-muted);
+  }
+
   /* SmolCSS-style responsive masonry/justified layout preserving aspect ratios */
   .justified-grid {
     --gap: 0.5rem;
@@ -66,8 +84,8 @@ const photos = Object.entries(assetPhotoModules)
     display: inline-block;
     margin: 0 0 var(--gap);
     width: 100%;
-    border: 1px solid #353535;
-    background: #111;
+    border: 1px solid var(--border);
+    background: var(--surface-1);
   }
 
   .gallery-item img,

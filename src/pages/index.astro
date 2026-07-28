@@ -61,7 +61,7 @@ const { Content: About } = await render(about!);
 				alt="Michael Profile Picture"
 				loading="eager"
 			/>
-			<h2>{name}</h2>
+			<h1>{name}</h1>
 			<ul class="overview-list">
 				{
 					quickInfo.map((info) => (
@@ -98,7 +98,7 @@ const { Content: About } = await render(about!);
 			</ul>
 		</Card>
 		<Card>
-			<h3 class="no-mt">Socials</h3>
+			<h2 class="no-mt">Socials</h2>
 			<ul class="overview-list">
 				{
 					socials.map((item) => (
@@ -164,7 +164,7 @@ const { Content: About } = await render(about!);
 						homepagePhotos.map((imgMod) => (
 							<Image
 								src={imgMod}
-								alt="Photo preview"
+								alt=""
 								widths={[320, 480]}
 								sizes="(max-width: 1024px) 50vw, 25vw"
 								loading="lazy"
@@ -216,7 +216,7 @@ const { Content: About } = await render(about!);
 		width: 100%;
 		height: auto;
 		display: block;
-		border: 1px solid #353535;
-		background: #111;
+		border: 1px solid var(--border);
+		background: var(--surface-1);
 	}
 </style>

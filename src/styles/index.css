@@ -23,7 +23,7 @@
 }
 
 .work-experience-duration {
-	color: #c7c7c7;
+	color: var(--text-muted);
 }
 
 .work-experience-container {
@@ -33,7 +33,7 @@
 }
 
 .work-experience-entry:not(:last-of-type) {
-	border-bottom: 1px solid #353535;
+	border-bottom: 1px solid var(--border);
 	padding-bottom: 1rem;
 }
 

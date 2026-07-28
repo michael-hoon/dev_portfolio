@@ -1,3 +1,12 @@
+/*
+ * Site breakpoints (no @custom-media support without a PostCSS plugin, so
+ * these are documented here rather than tokenized):
+ *   640px  - mobile
+ *   1380px - container gutter
+ * `photography.astro` additionally uses 1024px for its photo grid column
+ * count, which is intentionally independent of the layout breakpoints above.
+ */
+
 :root {
 	--primary: #8c5cf5;
 	/* Needed for some hover effects. This is just the R, G and B values of the hex color above */
@@ -5,6 +14,26 @@
 	/* Used for links */
 	--primary-light: #a277ff;
 	--primary-lightest: #c2a8fd;
+	/* --primary is ~4.2:1 against white text, below the 4.5:1 AA minimum for
+	   normal text. Use this darker shade instead wherever --primary is a
+	   background with white/light text on top (~6:1 against white). */
+	--primary-contrast-bg: #7135f3;
+
+	/* Surfaces, darkest to lightest */
+	--surface-0: #0b0b0b;
+	--surface-1: #121212;
+	--surface-2: #181818;
+	--surface-3: #252525;
+
+	--border: #353535;
+
+	--text-primary: #ffffff;
+	--text-muted: #c7c7c7;
+
+	--font-mono: "Geist Mono", "Courier New", Courier, monospace;
+
+	--transition-fast: .15s ease;
+	--transition-base: .25s ease;
 }
 
 .overview-list {
@@ -28,7 +57,7 @@
 a {
 	color: var(--primary-light);
 	text-decoration: none;
-	transition: color .15s ease;
+	transition: color var(--transition-fast);
 }
 
 a:hover {
@@ -38,6 +67,22 @@ a:hover {
 
 .no-mt {
 	margin-top: 0;
+}
+
+.page-title {
+	font-size: 1.5em;
+}
+
+.sr-only {
+	position: absolute;
+	width: 1px;
+	height: 1px;
+	padding: 0;
+	margin: -1px;
+	overflow: hidden;
+	clip: rect(0, 0, 0, 0);
+	white-space: nowrap;
+	border: 0;
 }
 
 main {
@@ -106,22 +151,24 @@ main {
 	flex-direction: column;
 	gap: 1rem;
 	padding: 1rem;
-	border: 1px solid #353535;
-	color: #ffffff;
+	border: 1px solid var(--border);
+	color: var(--text-primary);
 	text-decoration: none;
-	transition: background-color .15s ease, border .15s ease;
+	transition: background-color var(--transition-fast), border
+		var(--transition-fast);
 }
 
 .post-container:hover,
 .post-container:focus-visible {
 	background-color: rgba(var(--primary-rgb), 0.125);
 	border: 1px solid var(--primary);
-	color: white;
+	color: var(--text-primary);
 	text-decoration: none;
 }
 
 .post-container:focus-visible {
-	outline: none;
+	outline: 2px solid var(--primary-lightest);
+	outline-offset: 2px;
 }
 
 .post-header {
@@ -135,7 +182,7 @@ main {
 }
 
 .post-date {
-	color: #c7c7c7;
+	color: var(--text-muted);
 }
 
 .text-glow {
@@ -144,16 +191,20 @@ main {
 }
 
 .block-link {
-	color: white;
+	color: var(--text-primary);
 	padding: .25rem .5rem;
 }
 
 .block-link:hover,
 .block-link:focus-visible {
-	color: white;
-	background-color: var(--primary);
+	color: var(--text-primary);
+	background-color: var(--primary-contrast-bg);
 	text-decoration: none;
-	outline: none;
+}
+
+.block-link:focus-visible {
+	outline: 2px solid var(--primary-lightest);
+	outline-offset: 2px;
 }
 
 @media screen and (max-width: 1380px) {

@@ -1,6 +1,4 @@
 ---
-import "../styles/article-list.css";
-
 import { getCollection } from "astro:content";
 import Card from "../components/Card.astro";
 import PostList from "../components/PostList.astro";
@@ -19,7 +17,8 @@ const notes = await getCollection(
 >
   <div class="layout-grid-left" slot="left">
     <Card class="flex-col-card">
-      <h2 class="no-mt">Stats</h2>
+      <h1 class="no-mt page-title">Writing</h1>
+      <h2>Stats</h2>
 			<div class="stats-div">
 				<div class="stat">
 					<h3 class="text-glow">{notes.length}</h3>

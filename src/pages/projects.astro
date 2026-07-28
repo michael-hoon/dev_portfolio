@@ -1,6 +1,4 @@
 ---
-import "../styles/article-list.css";
-
 import { getCollection } from "astro:content";
 import { openGraph } from "spectre:globals";
 import Card from "../components/Card.astro";
@@ -20,7 +18,8 @@ const projects = await getCollection(
 >
   <div class="layout-grid-left" slot="left">
     <Card class="flex-col-card">
-      <h2 class="no-mt">Stats</h2>
+      <h1 class="no-mt page-title">Projects</h1>
+      <h2>Stats</h2>
 			<div class="stats-div">
 				<div class="stat">
 					<h3 class="text-glow">{projects.length}</h3>
