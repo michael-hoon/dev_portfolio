@@ -23,8 +23,8 @@ const config = defineConfig({
       name: 'Michael Hoon',
       openGraph: {
         home: {
-          title: 'AboutMe',
-          description: 'A minimalistic theme for Astro.'
+          title: 'Michael Hoon',
+          description: 'Portfolio of Michael Hoon — projects, learnings, and photography.'
         },
         projects: {
           title: 'Projects',

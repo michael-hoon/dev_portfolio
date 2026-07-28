@@ -52,5 +52,20 @@
   },
   {
     "id": "neovim"
+  },
+  {
+    "id": "large-language-models"
+  },
+  {
+    "id": "llm"
+  },
+  {
+    "id": "nlp"
+  },
+  {
+    "id": "research"
+  },
+  {
+    "id": "mixture-of-experts"
   }
 ]
