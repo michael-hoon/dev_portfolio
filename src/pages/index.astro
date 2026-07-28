@@ -39,7 +39,7 @@ const homepagePhotoModules = import.meta.glob<{ default: ImageMetadata }>(
 	{ eager: true },
 );
 const homepagePhotos = Object.entries(homepagePhotoModules)
-	.sort(([aPath], [bPath]) => aPath.localeCompare(bPath))
+	.sort(([aPath], [bPath]) => bPath.localeCompare(aPath))
 	.slice(0, 4)
 	.map(([, mod]) => mod.default);
 
@@ -55,7 +55,6 @@ const { Content: About } = await render(about!);
 	<div class="layout-grid-left" slot="left">
 		<Card class="flex-col-card">
 			<ImageGlow
-				quality={100}
 				width={320}
 				height={320}
 				src={ProfilePicture}
@@ -134,7 +133,7 @@ const { Content: About } = await render(about!);
 			<SectionHeader icon={{ type: "lucide", name: "briefcase-business" }} title="Work Experience" />
 			<div class="work-experience-container">
 				{
-					workExperience.reverse().map((entry) => (
+					[...workExperience].reverse().map((entry) => (
 						<div class="work-experience-entry">
 							<span class="work-experience-duration">
 								{entry.data.duration}

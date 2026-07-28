@@ -8,63 +8,19 @@ const assetPhotoModules = import.meta.glob<{ default: ImageMetadata }>(
 	"../assets/photos/*.{jpg,jpeg,png,webp,avif}",
 	{ eager: true },
 );
-type AssetMod = { default: ImageMetadata };
-const assetEntries = Object.entries(assetPhotoModules);
 
-// Define photo types
-type AssetPhoto = {
-	type: "asset";
-	src: string;
-	width: number;
-	height: number;
-	date: number;
-	mod: AssetMod;
-};
-
-type PublicPhoto = {
-	type: "public";
-	src: string;
-	width: undefined;
-	height: undefined;
-	date: number;
-};
-
-type Photo = AssetPhoto | PublicPhoto;
-
-// Load public photos as raw URLs
-const publicPhotoPaths = Object.keys(
-	import.meta.glob("/public/photos/*.{jpg,jpeg,png,webp,avif}"),
-);
-
-function extractDateFromPath(path: string): number | null {
+function extractDateFromPath(path: string): number {
 	const base = path.split("/").pop() || "";
 	const match = base.match(/(\d{4})-(\d{2})-(\d{2})/);
-	if (match) {
-		return new Date(match[0]).getTime();
-	}
-	return 0;
+	return match ? new Date(match[0]).getTime() : 0;
 }
 
-const assetPhotos: AssetPhoto[] = assetEntries.map(([path, mod]) => ({
-	type: "asset" as const,
-	src: mod.default.src,
-	width: mod.default.width,
-	height: mod.default.height,
-	date: extractDateFromPath(path) ?? 0,
-	mod,
-}));
-
-const publicPhotos: PublicPhoto[] = publicPhotoPaths.map((path) => ({
-	type: "public" as const,
-	src: path.replace("/public", ""),
-	width: undefined,
-	height: undefined,
-	date: extractDateFromPath(path) ?? 0,
-}));
-
-const photos: Photo[] = [...assetPhotos, ...publicPhotos].sort(
-	(a, b) => b.date - a.date,
-);
+const photos = Object.entries(assetPhotoModules)
+	.map(([path, mod]) => ({
+		mod,
+		date: extractDateFromPath(path),
+	}))
+	.sort((a, b) => b.date - a.date);
 ---
 
 <Layout
@@ -76,17 +32,13 @@ const photos: Photo[] = [...assetPhotos, ...publicPhotos].sort(
     <div class="justified-grid three-cols" id="gallery">
       {
         photos.map((p) => (
-          <a href={p.src} data-fancybox="gallery" class="gallery-item">
-            {p.type === "asset" ? (
-              <Image
-                src={p.mod.default}
-                alt="Photo"
-                loading="lazy"
-                sizes="(max-width: 1200px) 33vw, 33vw"
-              />
-            ) : (
-              <img loading="lazy" src={p.src} alt="Photo" />
-            )}
+          <a href={p.mod.default.src} data-fancybox="gallery" class="gallery-item">
+            <Image
+              src={p.mod.default}
+              alt="Photo"
+              loading="lazy"
+              sizes="(max-width: 1200px) 33vw, 33vw"
+            />
           </a>
         ))
       }
@@ -135,21 +87,5 @@ const photos: Photo[] = [...assetPhotos, ...publicPhotos].sort(
     .justified-grid {
       columns: 1 200px;
     }
-  }
-
-  /* toolbar removed */
-
-  .year-filter {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 0.5rem;
-    padding: 0;
-    list-style: none;
-    margin-top: 0.5rem;
-  }
-  .year-filter a {
-    text-decoration: none;
-    padding: 0.25rem 0.5rem;
-    border: 1px solid #353535;
   }
 </style>

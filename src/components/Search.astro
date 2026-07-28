@@ -1,0 +1,253 @@
+---
+---
+
+<li class="search-item">
+	<input id="search" type="text" placeholder="Search (Ctrl+K)" />
+	<div id="search-results"></div>
+</li>
+
+<script>
+	import type { PagefindModule } from "./pagefind-types";
+
+	const searchElement = document.querySelector<HTMLInputElement>("#search");
+	const results = document.querySelector<HTMLDivElement>("#search-results");
+
+	let focusIndex = -1;
+
+	function closeResults() {
+		results?.classList.remove("active");
+		focusIndex = -1;
+	}
+
+	document.addEventListener("keydown", (e) => {
+		if (e.key === "k" && e.ctrlKey) {
+			e.preventDefault();
+			searchElement?.focus();
+			return;
+		}
+
+		if (e.key === "Escape") {
+			searchElement?.blur();
+			closeResults();
+			return;
+		}
+
+		// Only hijack arrow keys while the results panel is actually open,
+		// otherwise they should scroll the page like normal.
+		if (!results?.classList.contains("active")) {
+			return;
+		}
+
+		if (e.key === "ArrowDown") {
+			e.preventDefault();
+
+			focusIndex++;
+			const resultLinks =
+				document.querySelectorAll<HTMLAnchorElement>("#search-results a");
+
+			if (focusIndex >= resultLinks.length) {
+				focusIndex = 0;
+			}
+
+			resultLinks[focusIndex]?.focus();
+		}
+
+		if (e.key === "ArrowUp") {
+			e.preventDefault();
+
+			focusIndex--;
+			const resultLinks =
+				document.querySelectorAll<HTMLAnchorElement>("#search-results a");
+
+			if (focusIndex < 0) {
+				focusIndex = resultLinks.length - 1;
+			}
+
+			resultLinks[focusIndex]?.focus();
+		}
+	});
+
+	// Generated at build time, so it can't be resolved as a static import
+	// specifier; kept as a non-literal path so TS treats the import as `any`
+	// instead of failing module resolution.
+	const pagefindModulePath = "/pagefind/pagefind.js";
+
+	let pagefind: PagefindModule | undefined;
+	let pagefindInitialized = false;
+
+	async function ensurePagefind() {
+		if (pagefindInitialized) {
+			return;
+		}
+
+		try {
+			pagefind = (await import(/* @vite-ignore */ pagefindModulePath)) as PagefindModule;
+			await pagefind.init();
+			pagefindInitialized = true;
+		} catch (error) {
+			console.error("Failed to initialize Pagefind:", error);
+		}
+	}
+
+	function updatePlaceholder() {
+		if (!searchElement) {
+			return;
+		}
+
+		searchElement.placeholder = window.matchMedia("(max-width: 640px)").matches
+			? "Search"
+			: "Search (Ctrl+K)";
+	}
+
+	searchElement?.addEventListener("focus", async () => {
+		searchElement.placeholder = "";
+		results?.classList.add("active");
+		await ensurePagefind();
+	});
+
+	searchElement?.addEventListener("blur", () => {
+		updatePlaceholder();
+		setTimeout(() => {
+			if (!document.activeElement?.closest("#search-results")) {
+				closeResults();
+			}
+		}, 1);
+	});
+
+	results?.addEventListener("focusout", (e) => {
+		const related = e.relatedTarget;
+		if (
+			!(related instanceof HTMLElement) ||
+			!related.closest("#search-results")
+		) {
+			closeResults();
+		}
+	});
+
+	searchElement?.addEventListener("input", async (e) => {
+		if (!pagefindInitialized || !pagefind || !results) {
+			return;
+		}
+
+		const value = (e.target as HTMLInputElement).value;
+		const search = await pagefind.search(value);
+
+		let searchResultHtml = "";
+		let i = 0;
+		for (const result of search.results) {
+			i++;
+
+			const data = await result.data();
+
+			searchResultHtml += `
+				<a href="${data.url}">
+					<h3 class="no-mt">${data.meta.title}</h3>
+					<p>${data.excerpt}</p>
+				</a>
+				${i < search.results.length ? '<hr class="separator">' : ""}
+			`;
+		}
+
+		results.innerHTML =
+			search.results.length === 0 && value.length > 0
+				? '<p style="margin-top: 0;">No results found</p>'
+				: searchResultHtml;
+
+		results.classList.add("active");
+	});
+
+	document.addEventListener("DOMContentLoaded", updatePlaceholder);
+	window.addEventListener("resize", updatePlaceholder);
+</script>
+
+<style>
+	#search {
+		background: none;
+		border: none;
+		outline: none;
+		padding: 0.25rem 0.5rem;
+		width: 160px;
+	}
+
+	#search::placeholder {
+		color: white;
+	}
+
+	#search:focus {
+		background-color: var(--primary);
+	}
+
+	#search-results {
+		position: absolute;
+		top: calc(100% + 0.5rem);
+		right: 0;
+		background-color: #252525;
+		border: 1px solid var(--primary);
+		display: none;
+		width: 200%;
+		z-index: 10;
+		padding: 0.5rem;
+	}
+
+	#search-results.active:has(*) {
+		display: block;
+	}
+
+	@media screen and (max-width: 640px) {
+		#search {
+			width: 100%;
+			max-width: none;
+			padding: 0.75rem 1rem;
+		}
+
+		#search-results {
+			width: 100%;
+			top: 100%;
+			font-size: 0.875em;
+		}
+	}
+</style>
+
+<style is:global>
+	#search-results a {
+		display: block;
+		text-decoration: none;
+		color: white !important;
+		padding: 0.5rem;
+	}
+
+	#search-results a:hover,
+	#search-results a:focus-visible {
+		background-color: var(--primary);
+		outline: none;
+	}
+
+	#search-results a:hover mark,
+	#search-results a:focus-visible mark {
+		background-color: #ffffff;
+		color: #000000;
+	}
+
+	#search-results a h3 {
+		margin-bottom: 0.5rem;
+	}
+
+	#search-results a p {
+		display: -webkit-box;
+		-webkit-line-clamp: 3;
+		-webkit-box-orient: vertical;
+		overflow: hidden;
+	}
+
+	#search-results mark {
+		background-color: var(--primary);
+		color: white;
+	}
+
+	.separator {
+		margin: 0.5rem 0.5rem;
+		border: none;
+		height: 1px;
+		background-color: #353535;
+	}
+</style>

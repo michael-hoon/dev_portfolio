@@ -2,9 +2,9 @@
 import { Image } from "astro:assets";
 import type { LocalImageProps, RemoteImageProps } from "astro:assets";
 
-type Props = LocalImageProps | RemoteImageProps;
+type Props = (LocalImageProps | RemoteImageProps) & { glow?: boolean };
 
-const { ...props } = Astro.props;
+const { glow = true, ...props } = Astro.props;
 
 const width = props.width;
 const height = props.height;
@@ -12,14 +12,16 @@ const height = props.height;
 
 <div class="glow-image">
   <Image {...props} />
-  <Image
-    width={width ? ((typeof width === 'number' ? width : Number.parseInt(width)) / 4) : undefined} 
-    height={height ? ((typeof height === 'number' ? height : Number.parseInt(height)) / 4) : undefined}
-    {...props}
-    class='glow'
-    class:list={[props.class]}
-    quality={75}
-  />
+  {glow && (
+    <Image
+      width={width ? ((typeof width === 'number' ? width : Number.parseInt(width)) / 4) : undefined}
+      height={height ? ((typeof height === 'number' ? height : Number.parseInt(height)) / 4) : undefined}
+      {...props}
+      class='glow'
+      class:list={[props.class]}
+      quality={75}
+    />
+  )}
 </div>
 <style>
   .glow-image {
