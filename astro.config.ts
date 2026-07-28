@@ -13,6 +13,9 @@ import { spectreDark } from "./src/ec-theme";
 const config = defineConfig({
 	site: "https://michaelhoon.dev",
 	output: "static",
+	redirects: {
+		"/projects/[post]": "/posts/[post]",
+	},
 	integrations: [
 		expressiveCode({
 			themes: [spectreDark],

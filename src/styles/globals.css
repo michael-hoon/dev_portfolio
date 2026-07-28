@@ -89,6 +89,18 @@ main {
 	border-radius: 0 !important;
 }
 
+.header-container {
+	display: flex;
+	flex-direction: row;
+	align-items: center;
+	gap: 1rem;
+	margin-bottom: 1rem;
+}
+
+.header-container * {
+	margin: 0;
+}
+
 .post-container {
 	display: flex;
 	flex-direction: column;
@@ -170,4 +182,21 @@ main {
 	display: flex;
 	flex-direction: column;
 	gap: 1rem;
+}
+
+.stats-div {
+	display: flex;
+	flex-direction: column;
+	gap: 1rem;
+}
+
+.stat {
+	display: flex;
+	flex-direction: column;
+}
+
+.stat h3 {
+	font-size: 2em;
+	margin: 0;
+	margin-bottom: .5rem;
 }

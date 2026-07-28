@@ -1,0 +1,17 @@
+---
+import type { CollectionEntry } from "astro:content";
+
+interface Props {
+	post: CollectionEntry<"posts">;
+}
+
+const { post } = Astro.props;
+---
+
+<a href={`/posts/${post.id}`} class="post-container">
+	<div class="post-header">
+		<h3>{post.data.title}</h3>
+		<span class="post-date">{post.data.date.toLocaleDateString()}</span>
+	</div>
+	<span>{post.data.description}</span>
+</a>

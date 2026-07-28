@@ -55,29 +55,33 @@ const tags = defineCollection({
 	}),
 });
 
-const projects = defineCollection({
-	loader: glob({ base: "src/content/projects", pattern: "**/*.{md,mdx}" }),
+const posts = defineCollection({
+	loader: glob({ base: "src/content/posts", pattern: "**/*.{md,mdx}" }),
 	schema: ({ image }) =>
 		z.object({
+			type: z.enum(["project", "note"]).default("project"),
 			title: z.string(),
 			description: z.string(),
 			date: z.coerce.date(),
-			image: image(),
+			draft: z.boolean().default(false),
+			image: image().optional(),
 			link: z.string().url().optional(),
-			info: z.array(
-				z.object({
-					text: z.string(),
-					icon: z.union([lucideIconSchema, simpleIconSchema]),
-					link: z.string().url().optional(),
-				}),
-			),
+			info: z
+				.array(
+					z.object({
+						text: z.string(),
+						icon: z.union([lucideIconSchema, simpleIconSchema]),
+						link: z.string().url().optional(),
+					}),
+				)
+				.optional(),
 			tags: z.array(reference("tags")).optional(),
 		}),
 });
 
 export const collections = {
 	tags,
-	projects,
+	posts,
 	other,
 	quickInfo,
 	socials,
