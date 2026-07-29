@@ -1,0 +1,127 @@
+---
+title: "What I Learned Building a Homelab (Before My Hard Drive Had Other Plans)"
+type: note
+date: 2026-07-29
+description: A fresh CS grad's notes from setting up a self-hosted media server: Essentials of Docker networking, Tailscale, LVM, and the painful debugging lessons.
+image: ../assets/homelab/homelab_meme.jpeg
+tags:
+  - homelab
+  - networking
+  - self-hosting
+  - docker
+  - jellyfin
+---
+
+import { Image } from 'astro:assets';
+import Figure from '../../components/Figure.astro';
+import diagram1 from '../assets/homelab/diagram_1.png';
+import diagram2 from '../assets/homelab/diagram_2.png';
+import diagram3 from '../assets/homelab/diagram_3.png';
+
+Somewhere between reading my third `iptables` chain diagram and discovering that my firewall had been quietly doing nothing for a week, I realized this project had stopped being about building a media server. It had become a crash course in systems and networking fundamentals I'd only ever seen in slides.
+ 
+I didn't finish. An external drive failed partway through, and the project is currently paused. But the part I *did* build taught me more about how real systems fail than any course project did. So here's what stuck, with enough detail that future-me can re-derive it without re-debugging it.
+ 
+## Setup
+ 
+An old ASUS Zenbook laptop (2022) repurposed as a headless Debian server, an external 2.5" Toshiba HDD for storage (LVM on top, in case I add more drives later), Docker for everything application-level, Tailscale for remote access instead of exposing anything to the open internet, and Caddy as a reverse proxy in front of it all. The goal: a Jellyfin-based media server with the "*arr stack" (Prowlarr, Sonarr, Radarr, qBittorrent) automating the boring parts.
+ 
+<Figure 
+  src={diagram1} 
+  alt="Diagram: LAN and Tailscale clients both reach Caddy; only Caddy can reach containers, over loopback" 
+  caption="Figure 1: LAN and Tailscale clients both reach Caddy; only Caddy can reach containers, over loopback"
+  width="80%"
+/>
+
+Standard homelab stuff.
+ 
+## Lesson 1: Docker will quietly walk around your firewall
+ 
+I set up `ufw` early, default-deny on incoming traffic, `OpenSSH` explicitly allowed. Then I ran a throwaway container with a published port and — out of habit more than suspicion — tried reaching it from another device on the LAN.
+ 
+It worked. `ufw status` said it shouldn't have.
+ 
+The mechanism, precisely: `ufw`'s rules live in netfilter's `INPUT` chain, which governs traffic *terminating on the host itself*. A container's published port isn't that — from the kernel's perspective it's traffic being *routed through* the host to a different destination (the container's network namespace), which travels the `FORWARD` chain instead. Docker inserts its own `DOCKER` and `DOCKER-USER` chains and wires them into `FORWARD` at container-network setup time, and those chains make the accept/drop decision before `ufw`'s `INPUT`-chain rules are ever consulted. `ufw status` isn't lying — it's just describing a chain the packet never traverses.
+ 
+<Figure 
+  src={diagram2} 
+  alt="Diagram: published container ports traverse the forward/docker chain and never reach ufw's input-chain rules; host-level ports do" 
+  caption="Figure 2: published container ports traverse the forward/docker chain and never reach ufw's input-chain rules; host-level ports do"
+  width="80%"
+/>
+
+You can see the actual rule ordering yourself:
+ 
+```bash
+sudo iptables -L DOCKER-USER -n -v --line-numbers
+sudo iptables -L FORWARD -n -v --line-numbers
+```
+ 
+The fix I settled on: never publish a bare port. Every container binds to `127.0.0.1` only —
+ 
+```yaml
+ports:
+  - "127.0.0.1:8989:8989"   # not "8989:8989"
+```
+ 
+— which forces the connection through the `INPUT` chain instead (since the host is now the actual destination for anything hitting `127.0.0.1`), and Caddy, running directly on the host, is the only process with anything listening on the LAN or tailnet side at all. The defense-in-depth alternative — populating `DOCKER-USER` directly with your own accept/drop rules — is more correct in the abstract, but loopback-binding is simpler to reason about and was enough for a single-host setup with no port-forwarding at the router.
+ 
+## Lesson 2: "the network" is actually three address spaces
+ 
+This was the source of nearly every real debugging session in this project. On a single Docker host with a reverse proxy and a VPN mesh, `127.0.0.1`, a container hostname, and a `.ts.net` hostname all mean something *structurally* different — and the failure modes for confusing them look almost identical from the outside (blank page, connection refused, timeout), so the actual skill being exercised was figuring out *which* layer was broken, not applying a known fix.
+ 
+<Figure 
+  src={diagram3} 
+  alt="Diagram: host loopback, the Docker bridge network, and the Tailscale network are three separate address spaces" 
+  caption="Figure 3: host loopback, the Docker bridge network, and the Tailscale network are three separate address spaces"
+  width="80%"
+/>
+
+- **`127.0.0.1`** is scoped per network namespace — the host has one, and every container has its own, entirely separate one. A container can't reach another container, or another one of the host's services, via `127.0.0.1`; there's nothing listening on that loopback from its point of view.
+- **The Docker bridge network** (a user-defined bridge, e.g. `172.18.0.0/16` in my case, confirmed via `docker network inspect proxy-net`) is where containers can reach each other, resolved *by container name* through Docker's embedded DNS server at `127.0.0.11` inside each container. `http://sonarr:8989` resolves there; `http://sonarr:8989` means nothing anywhere else.
+- **The Tailscale network** (`100.x.x.x`, or a `.ts.net` hostname via MagicDNS) is what remote devices use — and containers don't inherit it automatically. `systemd-resolved` on the host runs a stub resolver at `127.0.0.53`, which Tailscale hooks into via split-DNS for `*.ts.net` queries. Docker detects that the host's resolver lives on a loopback address, correctly infers it's unreachable from a container's own namespace, and silently substitutes a public resolver instead — so a container attempting to resolve a tailnet hostname doesn't error on the *query*, it just never learns the name exists, and fails with `getaddrinfo ENOTFOUND`. Fixing it means pointing the container explicitly at Tailscale's resolver:
+```yaml
+dns:
+  - 100.100.100.100
+```
+ 
+One extra wrinkle that cost real time separately from the three-namespace confusion: Docker's userland proxy performs **source NAT** on loopback-published connections. A request to `127.0.0.1:<published-port>` doesn't arrive inside the container looking like it came from `127.0.0.1` — the container has no valid return route for a packet claiming to be from its own loopback, so Docker rewrites the source to the bridge gateway address (e.g. `172.18.0.1`) before delivery. This matters concretely for any app-level feature that does anything based on source IP — I hit it with qBittorrent's login-ban-by-IP feature, where every request through the proxy appeared to come from the same gateway address, so one bad login attempt banned the proxy for everyone. The fix (`WebUI\ReverseProxySupportEnabled=true` + a `TrustedReverseProxiesList` containing that exact gateway IP) tells the app to trust `X-Forwarded-For` from that one known-good source instead of trusting the apparent connection IP.
+ 
+## Lesson 3: bind mounts don't negotiate on permissions
+ 
+Docker bind-mounts a host directory straight into a container with no UID translation (no `userns-remap` configured here) — whatever numeric UID the containerized process runs as gets checked against the exact same POSIX permission bits the host kernel would enforce for any process. LinuxServer.io images run as UID 1000 by default via `PUID`/`PGID` env vars, mapped to an internal `abc` user. My media directories had been created with `sudo mkdir -p` before any container existed, leaving them `root:root`, mode `755` — the container's UID 1000 process could traverse into them (read+execute) but not write.
+ 
+```bash
+sudo chown -R 1000:1000 /mnt/coldstorage/media /mnt/coldstorage/downloads
+```
+ 
+The generalizable lesson: a large fraction of "the container is broken" bug reports aren't container problems at all — they're ordinary Unix permission problems wearing a Docker costume, and the fix is exactly what it would be for any host process: check the owning UID against the process's effective UID.
+ 
+## Lesson 4: the *arr stack is a small systems-design case study
+ 
+Sonarr and Radarr default to **hardlinking** completed downloads into the organized library instead of copying them — an operation that's effectively instant and uses zero additional disk space, because it's just creating a second directory entry pointing at the same inode. The catch: hardlinks are constrained to a single filesystem; you cannot hardlink across a mount-point boundary, only within one.
+ 
+<!-- DIAGRAM 4: hardlink_pipeline — outer container "/data, same filesystem in every container",
+     two inner boxes downloads/ and media/, arrow labeled "hardlink (same inode)".
+     See chat reference render. -->
+![Diagram: downloads and the media library sit under one mounted filesystem, mapped identically across every container, so imports are hardlinks rather than copies](./diagrams/hardlink-pipeline.svg)
+ 
+Which is why the mount layout matters more than it looks like it should: `downloads/` and `media/` both live under one host mount point (`/mnt/coldstorage`), and — the part that's easy to get subtly wrong — every container in the pipeline maps that same host path to an *identical* internal path (`/data` in mine). If qBittorrent mounted only the `downloads` subtree while Sonarr mounted the whole tree, the containers would each see a technically-correct but differently-shaped filesystem, and Sonarr's hardlink attempt would silently fall back to a slow copy-then-delete instead of erroring — the kind of failure you only notice later, from disk usage or import latency, not from an error message. You can confirm the mechanism worked as intended by comparing inode numbers directly:
+ 
+```bash
+ls -li /mnt/coldstorage/downloads/<file> /mnt/coldstorage/media/tv/<series>/<file>
+```
+ 
+Matching inode numbers confirm a real hardlink; differing numbers mean it copied.
+ 
+## What debugging this actually taught me
+ 
+The individual facts here — a firewall bypass, a DNS substitution rule, a permissions bug, a filesystem constraint — are each explainable in a couple of sentences. What doesn't transfer from reading about them is the debugging *loop*: forming a hypothesis about which layer is broken, writing a test that isolates just that layer (a raw `wget` from inside a container rather than trusting a UI error message; a `docker network inspect` rather than trusting a value from three messages ago), and being willing to discover the hypothesis was wrong and try again. That loop — more than any specific command — is the thing I feel more confident about now.
+ 
+## Where it stands
+ 
+Working end-to-end: Prowlarr indexing, qBittorrent downloading, Sonarr importing into the library with hardlinks confirmed by inode, all reverse-proxied through Caddy over Tailscale with no ports forwarded at the router. Jellyfin itself, hardware transcoding, and backups were next — and didn't happen yet.
+ 
+## Postscript
+ 
+The external drive holding all the media storage failed partway through Sonarr testing. The rest of the stack — OS, Docker, networking, the *arr pipeline — is intact; the storage layer isn't. It's paused, not abandoned. To be continued once a replacement drive is in the mail.
