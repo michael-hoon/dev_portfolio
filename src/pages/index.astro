@@ -50,7 +50,9 @@ const { Content: About } = await render(about!);
 <Layout
 	title={openGraph.home.title || name}
 	description={openGraph.home.description}
+	image={ProfilePicture}
 	pagefindIgnore
+	person={{ sameAs: socials.map((item) => item.data.link) }}
 >
 	<div class="layout-grid-left" slot="left">
 		<Card class="flex-col-card">

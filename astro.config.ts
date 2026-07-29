@@ -34,10 +34,6 @@ const config = defineConfig({
 					title: "Projects",
 					description: "Projects I have worked on.",
 				},
-				blog: {
-					title: "Photography",
-					description: "Photos I have taken for fun.",
-				},
 			},
 		}),
 	],

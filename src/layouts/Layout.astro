@@ -20,6 +20,10 @@ interface Props {
 		createdAt: Date;
 		updatedAt?: Date;
 	};
+	/** Emit Person JSON-LD (for the homepage), with social profile URLs as `sameAs`. */
+	person?: {
+		sameAs: string[];
+	};
 }
 
 const {
@@ -30,6 +34,7 @@ const {
 	article,
 	fullWidth,
 	contentFirst,
+	person,
 } = Astro.props;
 
 const canonicalURL = new URL(Astro.url.pathname, Astro.site);
@@ -79,6 +84,42 @@ const ogImageURL = new URL(image?.src ?? "/img/og.png", Astro.site);
 		<meta name="twitter:title" content={title} />
 		{description && <meta name="twitter:description" content={description} />}
 		<meta name="twitter:image" content={ogImageURL} />
+
+		{article && (
+			<script
+				is:inline
+				type="application/ld+json"
+				set:html={JSON.stringify({
+					"@context": "https://schema.org",
+					"@type": "Article",
+					headline: title,
+					description,
+					image: ogImageURL.toString(),
+					datePublished: article.createdAt.toISOString(),
+					...(article.updatedAt && {
+						dateModified: article.updatedAt.toISOString(),
+					}),
+					author: { "@type": "Person", name },
+					url: canonicalURL.toString(),
+				})}
+			/>
+		)}
+
+		{person && (
+			<script
+				is:inline
+				type="application/ld+json"
+				set:html={JSON.stringify({
+					"@context": "https://schema.org",
+					"@type": "Person",
+					name,
+					url: canonicalURL.toString(),
+					image: ogImageURL.toString(),
+					sameAs: person.sameAs,
+				})}
+			/>
+		)}
+
 		<Analytics />
 	</head>
 	<body>

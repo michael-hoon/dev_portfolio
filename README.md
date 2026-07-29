@@ -1,6 +1,6 @@
 # Michael Hoon - Portfolio Website
 
-Personal portfolio website showcasing my AI and data engineering work.
+Personal portfolio website showcasing my AI and data engineering work, project writeups, learning notes, and photography.
 
 **Live Site:** [michaelhoon.dev](https://michaelhoon.dev)
 
@@ -18,17 +18,23 @@ Personal portfolio website showcasing my AI and data engineering work.
 
 ```
 src/
-├── assets/         # Static assets optimized by Astro
-│   └── photos/     # Photography gallery images
-├── components/     # Reusable Astro components
-├── content/        # Content collections
-│   ├── projects/   # Project MDX files
-│   ├── posts/      # Blog posts
-│   └── other/      # Other content
-├── layouts/        # Page layouts
-├── pages/          # Route pages
-├── scripts/        # Client-side scripts
-└── styles/         # Global CSS styles
+├── assets/               # Static assets optimized by Astro
+│   └── photos/           # Photography gallery images
+├── components/           # Reusable Astro components
+├── content/              # Content collections (see src/content.config.ts)
+│   ├── posts/            # Project write-ups and learning notes (MDX)
+│   ├── assets/           # Images referenced by posts/
+│   ├── other/            # Static content pages (About)
+│   ├── info.json         # Quick-info list on the homepage
+│   ├── socials.json      # Social links
+│   ├── tags.json         # Tag registry (referenced by posts)
+│   └── work.json         # Work experience entries
+├── data/                 # Plain data files consumed directly (not collections)
+│   └── photo-alt.json    # Optional alt text for photography, by filename
+├── layouts/              # Page layouts
+├── pages/                # Route pages
+├── scripts/              # Client-side scripts
+└── styles/               # Global CSS styles
 ```
 
 ## 🔧 Local Development
@@ -42,40 +48,53 @@ Visit `http://localhost:4321`
 
 ## 📝 Adding Content
 
-### Adding a New Project
+### Adding a Project or Note
 
-1. Create `src/content/projects/my-project.mdx`
+Posts live in `src/content/posts/` as a single collection with a `type` field:
+
+- `type: project` — something you built (has `image`, `link`, `info`)
+- `type: note` — a learning write-up (no image/info required)
+
+`/projects` and `/writing` are filtered views over this same collection, keyed off `type`.
+
+1. Create `src/content/posts/my-post.mdx`
 2. Add frontmatter:
 
 ```yaml
 ---
+type: project # or "note"
 title: "Project Title"
 description: "Brief description"
 date: 2025-01-15
-image: ~/assets/project-image.jpg
+image: ../assets/my-project/cover.jpg
 link: https://github.com/yourusername/repo
 info:
   - text: "GitHub"
     icon: { type: "simple-icons", name: "github" }
     link: https://github.com/yourusername/repo
-  - text: "Tech Stack"
-    icon: { type: "lucide", name: "code" }
+tags:
+  - some-tag # must already exist in src/content/tags.json
+draft: false # set true to keep it out of production builds
 ---
 ```
 
-3. Write content in Markdown/MDX
+3. Write content in Markdown/MDX. Referenced images go in `src/content/assets/<post-name>/`.
 
-### Adding Photos to Gallery
+### Adding Photos to the Gallery
 
-- **Optimized:** Place in `src/assets/photos/`
-- **Direct serve:** Place in `public/photos/`
-- **Naming:** Use format `YYYY-MM-DD-description.jpg` for automatic date sorting
+Place images in `src/assets/photos/`, named `YYYY-MM-DD[-n].jpg` — the gallery and homepage strip sort by the date in the filename, newest first.
 
-Example: `2025-01-15-sunset-landscape.jpg`
+Alt text is optional and off by default (`alt=""`, valid for decorative images). To caption a specific photo, add an entry to `src/data/photo-alt.json` keyed by filename:
+
+```json
+{
+  "2025-01-15-sunset-landscape.jpg": "Sunset over the harbour"
+}
+```
 
 ## 🚢 Deployment
 
-Automatically deploys to Vercel on push to `main` branch.
+Automatically deploys to Vercel on push to `main`/`master`. `postbuild` runs Pagefind indexing and syncs the generated search index into the Vercel output directory (`scripts/sync-pagefind.mjs`) — see that file if search stops returning results after a deploy.
 
 ### Manual Deploy
 ```bash
@@ -86,17 +105,19 @@ npm run preview
 ## 🧪 Development Scripts
 
 ```bash
-npm run dev         # Start development server
-npm run build       # Build for production
-npm run preview     # Preview production build
-npm run lint        # Run linter
-npm run format      # Format code
-npm run type-check  # Check TypeScript types
+npm run dev      # Start development server
+npm run build    # Build for production (also runs Pagefind indexing via postbuild)
+npm run preview  # Preview production build
+npm run lint     # Run Biome lint/format checks
+npm run format   # Auto-format with Biome
+npm run check    # Type-check .astro files with astro check
 ```
+
+CI (`.github/workflows/ci.yml`) runs `lint`, `check`, and `build` on every PR.
 
 ## 📄 License
 
-© 2025 Michael Hoon. All rights reserved.
+© 2025–2026 Michael Hoon. All rights reserved.
 
 ## 🤝 Based On
 
